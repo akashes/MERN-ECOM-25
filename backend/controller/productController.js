@@ -13,21 +13,17 @@ export const createProduct = handleAsyncError(async (req, res, next) => {
 
 //get all products
 export const getAllProducts = handleAsyncError(async (req, res, next) => {
-  try {
+  
     const products = await Product.find({});
     res.status(200).json({
       success: true,
       products,
     });
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
+ 
 });
 
 //update product
 export const updateProduct = handleAsyncError(async (req, res, next) => {
-  console.log("inside");
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -49,8 +45,8 @@ export const updateProduct = handleAsyncError(async (req, res, next) => {
 });
 
 //delete product
-export const deleteProduct = async (req, res, next) => {
-  try {
+export const deleteProduct = handleAsyncError( async (req, res, next) => {
+  
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
       return next(new handleError("product not found", 404));
@@ -60,15 +56,12 @@ export const deleteProduct = async (req, res, next) => {
       success: true,
       message: "product deleted successfully",
     });
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-};
+ 
+})
 
 //get single product
 export const getSingleProduct = handleAsyncError(async (req, res, next) => {
-  try {
+  
     const product = await Product.findById(req.params.id);
     if (!product) {
       return next(new handleError("product not found", 404));
@@ -78,8 +71,5 @@ export const getSingleProduct = handleAsyncError(async (req, res, next) => {
       success: true,
       product,
     });
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
+  
 });

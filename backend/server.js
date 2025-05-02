@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 dotenv.config({path:'backend/config/config.env'}) //path based on the root directory which started the app
 
 import { connectDB } from './config/db.js'
-
+ 
 connectDB()
 
 //handle uncaught exceptions
@@ -14,7 +14,7 @@ process.on('uncaughtException',err=>{
     process.exit(1)
 })
 
- 
+  
 
 
 
