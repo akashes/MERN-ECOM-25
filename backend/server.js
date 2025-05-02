@@ -3,7 +3,6 @@ import dotenv from 'dotenv'
 
 dotenv.config({path:'backend/config/config.env'}) //path based on the root directory which started the app
 
-import product from './routes/productRoutes.js'
 import { connectDB } from './config/db.js'
 
 connectDB()
@@ -13,6 +12,15 @@ connectDB()
 
 
 const PORT = process.env.PORT || 3000
-app.listen(PORT,()=>{
+const server =app.listen(PORT,()=>{
+
     console.log(`server is running on port ${PORT}`)
 })   
+
+process.on('unhandledRejection',err=>{
+    console.log(`Error:${err.message}`)
+    console.log('Server is shutting down due to unhandled promise rejection')
+    server.close(()=>{
+        process.exit(1)
+    })
+})  
