@@ -16,6 +16,21 @@ class APIFunctionality{
         // When a method inside a class returns this, it means it's returning the current instance of the class. 
         // This allows you to call another method on the same object immediately after.
     }
+
+    filter(){
+
+        const queryCopy ={...this.queryStr}
+        const removeFields=['keyword','limit','page']
+        removeFields.forEach(key=>delete queryCopy[key])
+        console.log(queryCopy)
+        //removed all other queries when filtering based on category
+        // this.query = this.query.find({...queryCopy,...this.query.getFilter()})
+        this.query = this.query.find(queryCopy)
+        return this
+        
+
+    
+    }
 }
 
 export default APIFunctionality
