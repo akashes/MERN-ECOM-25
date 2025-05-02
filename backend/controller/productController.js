@@ -37,18 +37,41 @@ export const getAllProducts =async(req,res)=>{
 //update product
 export const updateProduct=async(req,res)=>{
     try {
-        const product = await Product.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true})
+        let  product = await Product.findById(req.params.id)
         if(!product){
             return res.status(404).json({
                 success:false,
                 message:"product not found"
             })
         }
+        product =await Product.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true})
         res.status(200).json({
             success:true,
             product
         })
         
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error})
+    }
+}
+
+//delete product
+export const deleteProduct = async(req,res)=>{
+    try {
+        let product = await Product.findById(req.params.id)
+        if(!product){
+            return res.status(404).json({
+                success:false,
+                message:"product not found"
+            })
+            
+        }
+        product = await Product.findByIdAndDelete(req.params.id)
+        res.status(200).json({
+            success:true,
+            message:"product deleted successfully"
+        })
     } catch (error) {
         console.log(error)
         res.status(500).json({error})
