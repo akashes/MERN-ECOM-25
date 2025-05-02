@@ -7,6 +7,13 @@ import { connectDB } from './config/db.js'
 
 connectDB()
 
+//handle uncaught exceptions
+process.on('uncaughtException',err=>{
+    console.log(`Error:${err.message}`)
+    console.log('Server is shutting down due to uncaught exception')
+    process.exit(1)
+})
+
  
 
 
