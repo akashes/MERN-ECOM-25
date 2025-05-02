@@ -1,7 +1,7 @@
 import Product from "../models/productModel.js";
 import handleError from "../utlis/handleError.js";
 import handleAsyncError from "../middleware/handleAsyncError.js";
-
+import APIFunctionality from "../utlis/apiFunctionality.js";
 //create product
 export const createProduct = handleAsyncError(async (req, res, next) => {
   const product = await Product.create(req.body);
@@ -14,7 +14,10 @@ export const createProduct = handleAsyncError(async (req, res, next) => {
 //get all products
 export const getAllProducts = handleAsyncError(async (req, res, next) => {
   
-    const products = await Product.find({});
+  // console.log(req.query)
+  const apiFunctionality=  new APIFunctionality(Product.find(), req.query).search()
+  
+    const products = await apiFunctionality.query
     res.status(200).json({
       success: true,
       products,
@@ -73,3 +76,19 @@ export const getSingleProduct = handleAsyncError(async (req, res, next) => {
     });
   
 });
+
+
+export const searchProduct=handleAsyncError(async(req,res,next)=>{
+  console.log('inside search')
+  const search = req.query.search
+  console.log(search)
+  const result = await Product.find({
+    name:{$regex:search,$options:'i'}
+})
+res.status(200).json({
+  success:true,
+  product:result
+})
+
+
+})
