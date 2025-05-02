@@ -1,5 +1,5 @@
 import express from 'express'
-import {createProduct, deleteProduct, getAllProducts, updateProduct} from '../controller/productController.js'
+import {createProduct, deleteProduct, getAllProducts, getSingleProduct, updateProduct} from '../controller/productController.js'
 const router = express.Router()
 
 router.route('/products')
@@ -7,6 +7,7 @@ router.route('/products')
 .post(createProduct)
 
 router.route('/products/:id')
+.get(getSingleProduct)
 .put(updateProduct)
 .delete(deleteProduct)
 
