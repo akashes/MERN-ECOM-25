@@ -60,3 +60,17 @@ export const logout=handleAsyncError(async(req,res,next)=>{
         message:'Logged out successfully'
     })
 })
+
+export const resetPassword=handleAsyncError(async(req,res,next)=>{
+    console.log('reset password')
+    const user = await User.findById(req.user.id).select('+password')
+    req.user.password = req.body.password
+    await req.user.save()
+    
+    res.status(200).json({
+        success:true,
+        user
+    })
+    
+
+})
