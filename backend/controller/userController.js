@@ -24,3 +24,24 @@ export const registerUser=handleAsyncError(async(req,res,next)=>{
 
 })
 
+export const loginUser=handleAsyncError(async(req,res,next)=>{
+    const{email,password} = req.body
+    if(!email || !password){
+        return next(new handleError('Email or password cannot be empty',400))
+    }
+    const existingUser = await User.findOne({email}).select('+password')
+    if(!existingUser){
+        return next(new handleError('Invalid email or password',401))
+    }
+    const isPasswordValid = await existingUser.verifyPassword(password)
+    if(!isPasswordValid){
+        return next(new handleError('Invalid email or password',401))
+    }
+    const token = existingUser.getJwtToken()
+    res.status(200).json({
+        success:true,
+        user:existingUser,
+        token
+    })
+
+})
