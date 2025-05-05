@@ -49,3 +49,14 @@ export const loginUser=handleAsyncError(async(req,res,next)=>{
     sendToken(existingUser,200,res)
 
 })
+
+export const logout=handleAsyncError(async(req,res,next)=>{
+    res.cookie('token',null,{
+        expires:new Date(Date.now()),
+        httpOnly:true
+    })
+    res.status(200).json({
+        success:true,
+        message:'Logged out successfully'
+    })
+})
