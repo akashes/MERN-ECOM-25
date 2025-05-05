@@ -10,6 +10,7 @@ export const createProduct = handleAsyncError(async (req, res, next) => {
     product,
   });
 });
+ 
 
 //get all products
 export const getAllProducts = handleAsyncError(async (req, res, next) => {
