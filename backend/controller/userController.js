@@ -1,6 +1,7 @@
 import handleAsyncError from "../middleware/handleAsyncError.js";
 import User from "../models/userModel.js";
 import handleError from "../utlis/handleError.js";
+import { sendToken } from "../utlis/jwtToken.js";
 
 export const registerUser=handleAsyncError(async(req,res,next)=>{
 
@@ -15,12 +16,14 @@ export const registerUser=handleAsyncError(async(req,res,next)=>{
    if(!user){
    return next(new handleError('user creation failed',400))
    }
-   const token = user.getJwtToken()
-   res.status(201).json({
-    success:true,
-    user,
-    token
-   })
+//    const token = user.getJwtToken()
+//    res.status(201).json({
+//     success:true,
+//     user,
+//     token
+//    })
+sendToken(user,201,res)
+
 
 })
 
@@ -37,11 +40,12 @@ export const loginUser=handleAsyncError(async(req,res,next)=>{
     if(!isPasswordValid){
         return next(new handleError('Invalid email or password',401))
     }
-    const token = existingUser.getJwtToken()
-    res.status(200).json({
-        success:true,
-        user:existingUser,
-        token
-    })
+    // const token = existingUser.getJwtToken()
+    // res.status(200).json({
+    //     success:true,
+    //     user:existingUser,
+    //     token
+    // })
+    sendToken(existingUser,200,res)
 
 })
