@@ -58,10 +58,12 @@ userSchema.methods.verifyPassword =async function(userEnteredPassword){
 }
 //generating reset password token
 userSchema.methods.generatePasswordResetToken=function(){
+    console.log('insssdie')
     const resetToken = crypto.randomBytes(20).toString('hex')
     const resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex')
     this.resetPasswordToken = resetPasswordToken
     this.resetPasswordExpire = Date.now() + 30*60*1000
+    console.log(resetToken)
     return resetToken
     
 
