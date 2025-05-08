@@ -113,3 +113,14 @@ res.status(200).json({
 
 
 })
+
+//admin getting all products
+//separate controller from normal getAllProducts controller because filtering is not needed
+export const getAdminProducts = handleAsyncError(async(req,res,next)=>{
+  const products = await Product.find()
+  res.status(200).json({
+    success:true,
+    products
+  })
+
+})
