@@ -162,3 +162,26 @@ export const updatePassword=handleAsyncError(async(req,res,next)=>{
     sendToken(user,200,res)
 
 })
+
+export const updateUserProfile=handleAsyncError(async(req,res,next)=>{
+
+    // can update name,email,profile picture
+    const{name,email} = req.body
+
+    const updateUserDetails={
+        name,
+        email
+    }
+    //not updating with the whole request body because we dont want to update password here
+    const user = await User.findByIdAndUpdate(req.user.id,updateUserDetails,{
+        new:true,
+        runValidators:true
+    })
+    res.status(200).json({
+        success:true,
+        message:'Profile updated successfully',
+        user
+    })
+
+
+})
