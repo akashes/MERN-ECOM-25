@@ -4,13 +4,20 @@ import { roleBasedAccess, verifyUserAuth } from '../middleware/userAuth.js'
 const router = express.Router()
 
 router.route('/products')
-.get(verifyUserAuth,getAllProducts)
-.post( verifyUserAuth,roleBasedAccess('admin'), createProduct)
+.get(getAllProducts)
 
 router.route('/products/:id')
-.get(verifyUserAuth, getSingleProduct)
+.get( getSingleProduct)
+
+
+
+router.route('/admin/products') // create product router.route('/admin/product/create')
+.post( verifyUserAuth,roleBasedAccess('admin'), createProduct)
+
+router.route('/admin/products/:id')
 .put(verifyUserAuth,roleBasedAccess('admin'), updateProduct)
 .delete(verifyUserAuth,roleBasedAccess('admin'), deleteProduct)
+
 
 
 export default router
