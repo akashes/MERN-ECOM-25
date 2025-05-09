@@ -195,3 +195,14 @@ export const getUserList=handleAsyncError(async(req,res,next)=>{
         users
     })
 })
+
+export const getSingleUser=handleAsyncError(async(req,res,next)=>{
+    const user = await User.findById(req.params.id)
+    if(!user){
+        return next(new handleError('User not found',404))
+    }
+    res.status(200).json({
+        success:true,
+        user
+    })
+})

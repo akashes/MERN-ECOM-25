@@ -1,5 +1,5 @@
 import express from 'express'
-import { getUserDetails, getUserList, loginUser, logout, registerUser, requestPasswordReset, resetPassword, updatePassword, updateUserProfile  } from '../controller/userController.js'
+import { getSingleUser, getUserDetails, getUserList, loginUser, logout, registerUser, requestPasswordReset, resetPassword, updatePassword, updateUserProfile  } from '../controller/userController.js'
 import { roleBasedAccess, verifyUserAuth } from '../middleware/userAuth.js'
 
 const router = express.Router()
@@ -14,5 +14,6 @@ router.route('/password/update').post(verifyUserAuth,updatePassword)
 router.route('/profile/update').post(verifyUserAuth,updateUserProfile)
 
 router.route('/admin/users').get(verifyUserAuth,roleBasedAccess('admin'),getUserList)
+router.route('/admin/users/:id').get(verifyUserAuth,roleBasedAccess('admin'),getSingleUser)
 
 export default router
