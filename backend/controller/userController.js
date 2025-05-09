@@ -1,4 +1,5 @@
 import handleAsyncError from "../middleware/handleAsyncError.js";
+import Product from "../models/productModel.js";
 import User from "../models/userModel.js";
 import handleError from "../utlis/handleError.js";
 import { sendToken } from "../utlis/jwtToken.js";

@@ -2,6 +2,7 @@ import Product from "../models/productModel.js";
 import handleError from "../utlis/handleError.js";
 import handleAsyncError from "../middleware/handleAsyncError.js";
 import APIFunctionality from "../utlis/apiFunctionality.js";
+import User from "../models/userModel.js";
 //create product
 export const createProduct = handleAsyncError(async (req, res, next) => {
    req.body.user = req.user.id
@@ -113,6 +114,73 @@ res.status(200).json({
 
 
 })
+
+
+//create and update user review
+export const createProductReview=handleAsyncError(async(req,res,next)=>{
+  const{comment,rating,productId}=req.body
+
+  const reviewObject={
+    user:req.user.id,
+      name:req.user.name,
+      rating:Number(rating),
+      comment,
+  }
+  //check if product exists
+  const product = await Product.findById(productId)
+  if(!product){
+
+      return next(new handleError('Product does not exist',404))
+
+  }
+
+  //check if user has already reviewed the product
+  let reviewExists = product.reviews.find(
+    (review) => review.user.toString() === req.user.id.toString()
+  )
+  if(reviewExists){
+
+    product.reviews.forEach((review)=>{
+      if(review.user.toString() === req.user.id.toString()){
+        review.comment = comment
+        review.rating = rating
+      }
+    })
+  }else{
+    product.reviews.push(reviewObject)
+
+  }
+  //calculating no of reviews to update and ratings
+  product.numOfReviews = product.reviews.length
+  
+  const totalRatings = product.reviews.reduce((acc, item) => acc + item.rating, 0);
+  product.ratings = product.reviews.length > 0 ? totalRatings / product.reviews.length : 0;
+  
+
+  await product.save({validateBeforeSave:false})
+
+
+
+  res.status(200).json({
+      success:true,
+      message:reviewExists ? 'Review updated successfully' : 'Review added successfully'
+})})
+
+export const getProductReviews=handleAsyncError(async(req,res,next)=>{
+  const product = await Product.findById(req.query.id)
+  if(!product){
+
+      return next(new handleError('Product not found',404))
+
+  }
+
+  res.status(200).json({
+    success:true,
+    reviews : product.reviews
+  })
+
+})
+  
 
 //admin getting all products
 //separate controller from normal getAllProducts controller because filtering is not needed
