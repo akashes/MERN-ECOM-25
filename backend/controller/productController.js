@@ -180,6 +180,36 @@ export const getProductReviews=handleAsyncError(async(req,res,next)=>{
   })
 
 })
+
+export const deleteReview=handleAsyncError(async(req,res,next)=>{
+  const userId = req.user.id
+  const product = await Product.findById(req.query.productId)
+  if(!product){
+
+    return next(new handleError('Product not found',404))
+  }
+  //THIS APPROACH HAS A SLIGHT DISADVANTAGE BECAUSE WE CANT VALIDATE NEW USER REVIEWS SO  USING FINDBYIDANDUPDATE
+  //filtering out the review to be deleted
+//  product.reviews= product.reviews.filter(review=>review._id.toString()!==req.query.id.toString())
+//  //re-calculating review related fields
+//  product.numOfReviews=product.reviews.length
+//  const totalRatings = product.reviews.reduce((acc, item) => acc + item.rating, 0);
+//  product.ratings = product.reviews.length > 0 ? totalRatings / product.reviews.length : 0;
+//  await product.save({validateBeforeSave:false})
+
+let productReviews = product.reviews.filter(review=>review._id.toString()!==req.query.id.toString())
+let numOfReviews=productReviews.length
+let totalRatings = productReviews.reduce((acc, item) => acc + item.rating, 0);
+let ratings = productReviews.length > 0 ? totalRatings / productReviews.length : 0;
+await Product.findByIdAndUpdate(req.query.productId,{reviews:productReviews,numOfReviews,ratings},{new:true,runValidators:true})
+ res.status(200).json({
+  success:true,
+  message:'Review deleted successfully',
+
+
+})
+
+})
   
 
 //admin getting all products

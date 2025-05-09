@@ -1,5 +1,5 @@
 import express from 'express'
-import {createProduct, createProductReview, deleteProduct, getAdminProducts, getAllProducts, getProductReviews, getSingleProduct, updateProduct} from '../controller/productController.js'
+import {createProduct, createProductReview, deleteProduct, deleteReview, getAdminProducts, getAllProducts, getProductReviews, getSingleProduct, updateProduct} from '../controller/productController.js'
 import { roleBasedAccess, verifyUserAuth } from '../middleware/userAuth.js'
 const router = express.Router()
 
@@ -22,5 +22,5 @@ router.route('/admin/products/:id')
 
 router.route('/reviews').post(verifyUserAuth,createProductReview)
 router.route('/reviews').get(getProductReviews) //accepts product id as query
-
+router.route('/reviews').delete(verifyUserAuth,deleteReview) //accepts product id as query
 export default router
