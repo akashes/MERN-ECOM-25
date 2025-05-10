@@ -65,3 +65,28 @@ export const getAllOrders=handleAsyncError(async(req,res,next)=>{
     
   })
 })
+
+//update order status
+
+export const updateOrderStatus= handleAsyncError(async(req,res,next)=>{
+    const order = await Order.findById(req.params.id)
+    if(!order){
+        return next(new handleError('Order not found',404))
+    }
+    if(order.orderStatus==='Delivered'){
+        return next(new handleError('You have already delivered this order',400))
+    }
+    await Promise.all(
+        order.orderItems.map((item)=>console.log(item))
+    )
+    order.orderStatus = req.body.status
+    //adding deliveredAt only if status is delivered
+    if(req.body.status === 'Delivered'){
+        order.deliveredAt = Date.now()
+    }
+    // await order.save()
+    res.status(200).json({
+        success:true,
+        order
+    })
+})
