@@ -76,17 +76,32 @@ export const updateOrderStatus= handleAsyncError(async(req,res,next)=>{
     if(order.orderStatus==='Delivered'){
         return next(new handleError('You have already delivered this order',400))
     }
+     // Only update stock when status is Shipped or Delivered
+  if (req.body.status === 'Shipped' || req.body.status === 'Delivered') {
     await Promise.all(
-        order.orderItems.map((item)=>console.log(item))
-    )
+      order.orderItems.map((item) =>
+        updateStock(item.product, item.quantity)
+      )
+    );
+  }
+    
     order.orderStatus = req.body.status
     //adding deliveredAt only if status is delivered
     if(req.body.status === 'Delivered'){
         order.deliveredAt = Date.now()
     }
-    // await order.save()
+    await order.save({validateBeforeSave:false})
     res.status(200).json({
         success:true,
         order
     })
 })
+
+async function updateStock(productId,quantity){
+    const product = await Product.findById(productId)
+    if(!product){
+        return next(new handleError('Product not found',404))
+    }
+    product.stock -= quantity
+    await product.save({validateBeforeSave:false})
+}
