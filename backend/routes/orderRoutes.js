@@ -1,9 +1,10 @@
 import express from 'express'
-import { verifyUserAuth } from '../middleware/userAuth.js'
-import { createOrder } from '../controller/orderController.js'
+import { roleBasedAccess, verifyUserAuth } from '../middleware/userAuth.js'
+import { createOrder, getSingleOrder } from '../controller/orderController.js'
 
 const router = express.Router()
 
-router.route('/order').post(verifyUserAuth,createOrder)
+router.route('/orders').post(verifyUserAuth,createOrder)
+router.route('/admin/orders/:id').get(verifyUserAuth,roleBasedAccess('admin'),getSingleOrder)
 
 export default router
