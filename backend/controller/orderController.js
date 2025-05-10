@@ -38,7 +38,7 @@ export const getSingleOrder=handleAsyncError(async(req,res,next)=>{
     })
 })
 
-//get all orders of the user
+//get all orders of the logged in user
 export const getMyOrders=handleAsyncError(async(req,res,next)=>{
   const orders=  await Order.find({user:req.user.id}).sort({createdAt:-1})
   if(!orders){
@@ -47,6 +47,21 @@ export const getMyOrders=handleAsyncError(async(req,res,next)=>{
   res.status(200).json({
     success:true,
     orders
+    
+  })
+})
+
+//get all orders
+export const getAllOrders=handleAsyncError(async(req,res,next)=>{
+  const orders=  await Order.find()
+  const total = orders.reduce((acc,item)=>item.totalPrice+acc,0)
+  if(!orders){
+    return next(new handleError('Orders not found',404))
+  }
+  res.status(200).json({
+    success:true,
+    orders,
+    total
     
   })
 })
