@@ -1,10 +1,14 @@
-import React from 'react'
-
+import Footer from '../components/Footer'
+import '../pageStyles/Home.css'
 const Home = () => {
   return (
-    <div>
-      HOME
+   <>
+    <div className="home-container">
+      <h2 className="home-heading">Trending Now</h2>
+
     </div>
+<Footer/>    
+   </>
   )
 }
 
