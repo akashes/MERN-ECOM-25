@@ -18,13 +18,12 @@ const ImageSlider = () => {
             clearInterval(interval)
         }
     },[])
-    console.log(currentIndex*100)
   return (
     <div className='image-slider-container'>
         <div className="slider-images" style={{transform:`translateX(-${currentIndex*100}%)`}}>
 {      images.map((image,index)=>{
     return(
-        <div className="slider-item">
+        <div className="slider-item" key={index}>
                 <img src={image} alt={`Slide ${index+1}`} />
             </div>
 
