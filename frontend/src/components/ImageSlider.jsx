@@ -1,0 +1,55 @@
+import React, { useEffect, useState } from 'react'
+import '../componentStyles/ImageSlider.css'
+const images=[
+    './images/banner.jpg',
+    './images/banner.jpg',
+    './images/banner.jpg',
+    './images/banner.jpg'
+]
+const ImageSlider = () => {
+    const[currentIndex,setCurrentIndex]=useState(0)
+    useEffect(() => {
+       
+     const interval=   setInterval(()=>{
+            setCurrentIndex(prev=>(prev+1)%images.length)
+
+        },5000)
+        return () => {
+            clearInterval(interval)
+        }
+    },[])
+    console.log(currentIndex*100)
+  return (
+    <div className='image-slider-container'>
+        <div className="slider-images" style={{transform:`translateX(-${currentIndex*100}%)`}}>
+{      images.map((image,index)=>{
+    return(
+        <div className="slider-item">
+                <img src={image} alt={`Slide ${index+1}`} />
+            </div>
+
+    )
+})      }
+         
+       
+        </div>
+          <div className="slider-dots" style={{zIndex:'1'}}>
+            {
+
+           images.map((_,index)=>{
+            return(
+
+                <span onClick={()=>setCurrentIndex(index)} className={`dot ${index === currentIndex ? 'active' : ''}`}>
+                                </span>
+
+            )
+           }) 
+            }
+
+         </div>
+      
+    </div>
+  )
+}
+
+export default ImageSlider
