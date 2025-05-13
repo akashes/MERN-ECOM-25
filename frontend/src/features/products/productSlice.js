@@ -25,7 +25,7 @@ const fetchProducts=createAsyncThunk('product/fetchProducts',async(_,{rejectWith
 //get single product
 const getProduct = createAsyncThunk('product/getProduct',async(id,{rejectWithValue})=>{
     try {
-        const link = `/api/v1/product/${id}`
+        const link = `/api/v1/products/${id}`
         const {data} = await axios.get(link)
         return data
     } catch (error) {

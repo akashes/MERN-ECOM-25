@@ -6,60 +6,104 @@ import PageTitle from '../components/PageTitle'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Rating from '../components/Rating'
-import { getProduct } from '../features/products/productSlice'
+import { getProduct, removeErrors } from '../features/products/productSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import Loader from '../components/Loader'
+import { toast } from 'react-toastify'
 const ProductPage = () => {
      const[userRating,setUserRating]=useState(0)
      const dispatch = useDispatch()
+
         const handleRatingChange=(newRating)=>{
             setUserRating(newRating)
         }
-    const[products,setProducts] = useState({})
     const params = useParams()
     const id = params.id
 
+    const {product,error,loading}=useSelector((state)=>state.product)
+  
+
     useEffect(()=>{
-        // const fetchData=async()=>{
-            
-        //     const res = await axios.get(`/api/v1/products/${id}`)
-        //     setProducts(res.data.product)
-        // }
-        // fetchData()
-        dispatch(getProduct(id))
 
-    },[id])
+        if(id){
+            dispatch(getProduct(id))
+        }
 
-    console.log(products)
+        return()=>{
+            dispatch(removeErrors())
+        }
+     
+    },[dispatch,id])
+      useEffect(()=>{
+    
+        if(error){
+          toast.error(error.message,{
+            position:'top-center',
+            autoClose:3000
+          })
+          dispatch(removeErrors())
+        }
+      },[dispatch,error])
+
+    if(loading){
+      return (
+
+          <>
+      <Navbar/>
+      <Loader/>
+      <Footer/>
+      </>
+        )
+    }
+    if(error || !product){
+      return (
+        <>
+        <PageTitle title={`Product not found`} />
+        <Navbar/>
+        <h1 style={{marginTop:"100px"}}>Product not found</h1>
+        <Footer/>
+        </>
+      )
+    }
+
+    console.log(product)
 
   return (
     <>
-    <PageTitle title='product Name - Details' />
+    <PageTitle title={`${product?.name} - Details`} />
     <Navbar/>
     <div className="product-details-container">
         <div className="product-detail-container">
             <div className="product-image-container">
-                <img src="" alt="Product title" className='product-detail-image' />
+
+                <img src={product?.image[0]?.url} alt="Product title" className='product-detail-image' />
 
             </div>
             <div className="product-info">
-                <h2>Product Name</h2>
+                <h2>{product?.name}</h2>
                 <p className="product-description">
-                    Product Description
+                    {product.description}
                 </p>
                 <p className="product-price">
-                    Price: 200/-
+                    Price: {product.price}/-
                 </p>
                 <div className="product-rating"> 
-                    <Rating value={2} disabled={true} />
-                    <span className="productCardSpan">
-                        (1 Review)
+                    <Rating value={product.ratings} disabled={true} />
+                         <span className="productCardSpan">
+                {product.numOfReviews}{product.numOfReviews===1?" Review":" Reviews"} 
+
                     </span>
                      </div>
+
                      <div className="stock-status">
-                        <span className="in-stock">
-                            In Stock (8 available)
+                        <span className={product.stock>0?'in-stock':'out-of-stock'}>
+                            {
+                                product.stock>0 ?`In Stock (${product.stock} available)`:`Out of Stock` 
+                            }
                         </span>
                      </div>
-                     <div className="quantity-controls">
+                  { product.stock>0 &&  <>
+                      <div className="quantity-controls">
                         <span className="quantity-label">
                             Quantity :
                         </span>
@@ -69,6 +113,9 @@ const ProductPage = () => {
                     
                      </div>
                      <button className="add-to-cart-btn">Add to Cart</button>
+                  </>
+                   
+                   }
                      <form  className="review-form">
                         <h3>Write a Review</h3>
                         <Rating value={0}
@@ -84,15 +131,29 @@ const ProductPage = () => {
         </div>
         <div className="reviews-container">
             <h3>Customer Reviews</h3>
+           { 
+           product.reviews && product.reviews.length>0 ?(
             <div className="reviews-section">
-                <div className="review-item">
+               {
+                product.reviews.map((review,index)=>{
+                    return(
+                         <div className="review-item" key={review._id}>
                     <div className="review-header">
-                        <Rating value={2} disabled={true} />
+                        <Rating value={review.rating} disabled={true} />
                     </div>
-                    <p className="p review-comment">Review Comment</p>
-                    <p className="review-namee">By Akash</p>
+                    <p className="p review-comment">{review.comment}</p>
+                    <p className="review-name">{review.name}</p>
                 </div>
+                    )
+                })
+               }
             </div>
+
+           ):(
+            <p>No reviews yet . Be the first to write a review</p>
+           )
+            
+            }
         </div>
     </div>
 
