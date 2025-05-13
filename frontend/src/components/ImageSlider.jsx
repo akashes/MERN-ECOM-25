@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import '../componentStyles/ImageSlider.css'
 const images=[
-    './images/banner.jpg',
-    './images/banner.jpg',
-    './images/banner.jpg',
-    './images/banner.jpg'
+    './images/image.png',
+    './images/image.png',
+    './images/image.png',
+    './images/image.png'
 ]
 const ImageSlider = () => {
     const[currentIndex,setCurrentIndex]=useState(0)
-    useEffect(() => {
+    useEffect(() => { 
        
      const interval=   setInterval(()=>{
             setCurrentIndex(prev=>(prev+1)%images.length)
@@ -24,7 +24,7 @@ const ImageSlider = () => {
 {      images.map((image,index)=>{
     return(
         <div className="slider-item" key={index}>
-                <img src={image} alt={`Slide ${index+1}`} />
+                <img src={image} alt={`Slide ${index+1}`} loading='lazy'/>
             </div>
 
     )

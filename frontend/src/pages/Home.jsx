@@ -6,7 +6,9 @@ import PageTitle from '../components/PageTitle'
 import Product from '../components/Product'
 import '../pageStyles/Home.css'
 import { useEffect } from 'react'
-import { fetchProducts } from '../features/products/productSlice.js'
+import { fetchProducts, removeErrors } from '../features/products/productSlice.js'
+import Loader from '../components/Loader.jsx'
+import { toast } from 'react-toastify'
 // const products=[
 //    {
 //             "_id": "6818ddbba199ed8135a62be8",
@@ -53,10 +55,26 @@ const Home = () => {
     
     dispatch(fetchProducts())
   },[dispatch])
-  console.log(products)
+  useEffect(()=>{
+
+    if(error){
+      toast.error(error.message,{
+        position:'top-center',
+        autoClose:3000
+      })
+      dispatch(removeErrors())
+    }
+  },[dispatch,error])
+
+  if(loading){
+    return <h2>Loading...</h2>
+  }
   return (
    <>
-   <PageTitle title="Home-My Shop "/>
+   {
+    loading?(<Loader/>):(
+      <>
+      <PageTitle title="Home-My Shop "/>
    <Navbar/>
    <ImageSlider/>
     <div className="home-container">
@@ -66,7 +84,7 @@ const Home = () => {
         products.length>0 && products.map((product)=>{
           console.log('producttt')
          return (
-         <Product product={product} key={product._id} />
+        <Product product={product} key={product._id} />
         )
         })
       }
@@ -74,6 +92,10 @@ const Home = () => {
 
     </div>
 <Footer/>    
+      </>
+      
+    )
+   }
    </>
   )
 }
