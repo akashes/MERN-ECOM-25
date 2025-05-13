@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import {Routes,BrowserRouter as Router , Route } from 'react-router-dom'
 import ProductPage from './pages/ProductPage'
+import Products from './pages/Products'
 
 const Home = React.lazy(() => import('./pages/Home'))
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
        <Routes>
     <Route path='/' element={<Home/>}/>
     <Route path='/product/:id' element={<ProductPage/>} />
+    <Route path='/products' element={<Products/>} />
   </Routes>
       </Suspense>
     </Router>
