@@ -4,11 +4,17 @@ import errorHandleMiddleware from './middleware/error.js'
 import user from './routes/userRoutes.js'
 import cookieParser from 'cookie-parser'
 import order from './routes/orderRoutes.js'
+import cors from 'cors'
 
 const app = express()
 
 
 //middlewares
+app.use(cors(
+    {
+        origin:'*'
+    }
+))
 app.use(express.json())
 app.use(cookieParser())
 

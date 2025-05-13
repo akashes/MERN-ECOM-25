@@ -6,8 +6,10 @@ import PageTitle from '../components/PageTitle'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Rating from '../components/Rating'
+import { getProduct } from '../features/products/productSlice'
 const ProductPage = () => {
      const[userRating,setUserRating]=useState(0)
+     const dispatch = useDispatch()
         const handleRatingChange=(newRating)=>{
             setUserRating(newRating)
         }
@@ -16,12 +18,13 @@ const ProductPage = () => {
     const id = params.id
 
     useEffect(()=>{
-        const fetchData=async()=>{
+        // const fetchData=async()=>{
             
-            const res = await axios.get(`/api/v1/products/${id}`)
-            setProducts(res.data.product)
-        }
-        fetchData()
+        //     const res = await axios.get(`/api/v1/products/${id}`)
+        //     setProducts(res.data.product)
+        // }
+        // fetchData()
+        dispatch(getProduct(id))
 
     },[id])
 
