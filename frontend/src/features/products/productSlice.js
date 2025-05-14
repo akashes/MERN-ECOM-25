@@ -6,14 +6,17 @@ const initialState={
     productCount:0,
     loading:false,
     error:null,
-    product:null
+    product:null,
+    resultsPerPage:4,
+    totalPages:0,
 }
-const fetchProducts=createAsyncThunk('product/fetchProducts',async(keyword,{rejectWithValue})=>{
+const fetchProducts=createAsyncThunk('product/fetchProducts',async({keyword,page=1},{rejectWithValue})=>{
     
     try {
         console.log('inside product slice')
-        console.log({keyword})
-        const link = keyword?`/api/v1/products?keyword=${encodeURIComponent(keyword)}`:`/api/v1/products`
+        console.log(keyword)
+        const link = keyword?`/api/v1/products?keyword=${encodeURIComponent(keyword)}&page=${page}`
+        :`/api/v1/products?page=${page}`
         const {data} = await axios.get(link)
         return data
    
@@ -56,7 +59,10 @@ const productSlice = createSlice({
             state.loading=false,
             state.products=action.payload.products
             state.productCount=action.payload.productCount
+            state.resultsPerPage=action.payload.resultsPerPage
+            state.totalPages=action.payload.totalPages
             state.error=null
+
         }),
         builder.addCase(fetchProducts.rejected,(state,action)=>{
             state.error = action.payload || 'something went wrong'

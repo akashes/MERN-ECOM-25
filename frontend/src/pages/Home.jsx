@@ -53,7 +53,7 @@ const Home = () => {
   const {loading,error,products,productCount} = useSelector((state)=>state.product)
   useEffect(()=>{
     
-    dispatch(fetchProducts())
+    dispatch(fetchProducts({keyword:''}))
   },[dispatch])
   useEffect(()=>{
 
