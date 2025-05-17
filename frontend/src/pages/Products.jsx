@@ -17,22 +17,26 @@ const Products = () => {
     const {products,loading,error,totalPages,resultsPerPage,productCount}=useSelector(state=>state.product)
     const navigate  = useNavigate()
 
+    const[isInitialLoading,setIsInitialLoading]=React.useState(true)
+
 // getting query values from url
     const location = useLocation()
    const searchParams = new URLSearchParams(location.search)
    const keyword = searchParams.get('keyword')
+   const category = searchParams.get('category')
    const pageFromURL = parseInt(searchParams.get('page'),10)||1
 
    const [currentPage,setCurrentPage]=React.useState(pageFromURL)
-   console.log(keyword)
-
-    console.log(searchParams)
+ 
+   const categories=["laptop","mobile","gadget","electronics","glass"]
     useEffect(()=>{
-            dispatch(fetchProducts({keyword,page:currentPage}))
+            dispatch(fetchProducts({keyword,page:currentPage,category}))
+            .unwrap()
+            .then(()=>setIsInitialLoading(false))
      
 
 
-    },[dispatch,keyword,currentPage])
+    },[dispatch,keyword,currentPage,category])
 
       useEffect(()=>{
     
@@ -59,9 +63,17 @@ const handlePageChange=(page)=>{
 
   }
 }
+const handleCategoryClick=(category)=>{
+  const newSearchParams= new URLSearchParams(location.search)
+  newSearchParams.set('category',category)
+  newSearchParams.delete('page')
+  // setCurrentPage(1)
+  // newSearchParams.set('page',1)
+  navigate(`?${newSearchParams.toString()}`)
+}
   return (
  <>
-   {loading ? (<Loader/>):(
+   {loading && isInitialLoading ? (<Loader/>):(
      <>
     <PageTitle title='All Products'/>
     <Navbar/>
@@ -69,6 +81,15 @@ const handlePageChange=(page)=>{
         <div className="filter-section">
             <h3 className='filter-heading'>CATEGORIES</h3>
             {/* render categories */}
+            <ul>
+              {
+                categories.map(category=>(
+                  <li
+                  onClick={()=>handleCategoryClick(category)}
+                   key={category}>{category}</li>
+                ))
+              }
+            </ul>
         </div>
         <div className="products-section">
 

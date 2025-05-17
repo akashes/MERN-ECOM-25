@@ -23,7 +23,9 @@ const Pagination = (
     const getPageNumbers=()=>{
             const pageNumbers=[]
             const pageWindow=2
-            for(let i=Math.max(1,currentPage-pageWindow);i<=Math.min(totalPages,currentPage+pageWindow);i++){
+            for(let i=Math.max(1,currentPage-pageWindow);
+            i<=Math.min(totalPages,currentPage+pageWindow);
+            i++){
                 pageNumbers.push(i)
             }
             return pageNumbers

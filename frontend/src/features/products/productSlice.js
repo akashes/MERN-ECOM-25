@@ -10,13 +10,22 @@ const initialState={
     resultsPerPage:4,
     totalPages:0,
 }
-const fetchProducts=createAsyncThunk('product/fetchProducts',async({keyword,page=1},{rejectWithValue})=>{
+const fetchProducts=createAsyncThunk('product/fetchProducts',async({keyword,page=1,category},{rejectWithValue})=>{
     
     try {
-        console.log('inside product slice')
-        console.log(keyword)
-        const link = keyword?`/api/v1/products?keyword=${encodeURIComponent(keyword)}&page=${page}`
-        :`/api/v1/products?page=${page}`
+       
+        let link = '/api/v1/products?page='+page
+        if(category){
+            link+=`&category=${category}`
+        }
+        if(keyword){
+            link+=`&keyword=${keyword}`
+
+            
+        }
+        console.log(link)
+        // const link = keyword?`/api/v1/products?keyword=${encodeURIComponent(keyword)}&page=${page}`
+        // :`/api/v1/products?page=${page}`
         const {data} = await axios.get(link)
         return data
    
