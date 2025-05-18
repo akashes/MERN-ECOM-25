@@ -24,7 +24,7 @@ const Navbar = () => {
 
     const navigate = useNavigate()
 
-    const isAuthenticated = true
+    const isAuthenticated = false
 
     const handleSearchSubmit=(e)=>{
         e.preventDefault()
@@ -78,7 +78,9 @@ const Navbar = () => {
                         </Link>
                 </div>
                 {
-                !isAuthenticated &&  <Link to='/register' className='register-link'><PersonAddIcon className='icon'/></Link>
+                !isAuthenticated &&  <Link to='/register' className='register-link'>
+                    <PersonAddIcon className='icon'/>
+                    </Link>
                    
                 }
                 <div className="navbar-hamburger" onClick={toggleMenu}>

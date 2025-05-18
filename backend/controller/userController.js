@@ -7,9 +7,12 @@ import { sendEmail } from "../utlis/sendEmail.js";
 import crypto from 'crypto'
 
 export const registerUser=handleAsyncError(async(req,res,next)=>{
-
+console.log('inside register user')
+console.log(req.body)
     const{name,email,password}=req.body
-   const user = await User.create({name,
+    console.log(name,email,password)
+   const user = await User.create({
+    name,
     email,
     password,
     avatar:{
@@ -19,12 +22,7 @@ export const registerUser=handleAsyncError(async(req,res,next)=>{
    if(!user){
    return next(new handleError('user creation failed',400))
    }
-//    const token = user.getJwtToken()
-//    res.status(201).json({
-//     success:true,
-//     user,
-//     token
-//    })
+
 sendToken(user,201,res)
 
 
