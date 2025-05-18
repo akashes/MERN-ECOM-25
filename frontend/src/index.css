@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
+
 :root { 
     
     --primary-main: #6C5B7B; 
@@ -16,6 +18,9 @@
 
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2); 
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.15); 
+}
+
+body{  font-family: "Karla", sans-serif;
 }
 *{
     margin:0;
