@@ -3,6 +3,7 @@ import handleError from "../utlis/handleError.js"
 
 
 export default (err,req,res,next)=>{
+    console.log(err)
     //castError
     if(err.name === 'CastError'){
         const message = `Resource not found. Invalid: ${err.path}`

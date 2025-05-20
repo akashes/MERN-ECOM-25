@@ -7,9 +7,11 @@ import axios from 'axios'
 //registration api
 
 const register = createAsyncThunk('user/register',async(userData,{rejectWithValue})=>{
-    for(let val of userData.entries()){
-        console.log(val)
-    }
+    console.log('inside user slice')
+    console.log({userData})
+    // for(let val of userData.entries()){
+    //     console.log(val)
+    // }
     try {
         const config={
             headers:{
@@ -21,9 +23,7 @@ const register = createAsyncThunk('user/register',async(userData,{rejectWithValu
        console.log('registration data',data)
        return data
     } catch (error) {
-        console.log(error)
-        console.log(error.response)
-        console.log(error.response.data)
+                    console.log(error.response)
         return rejectWithValue(error.response?.data || 'Registration failed. please try again later')
         
     }

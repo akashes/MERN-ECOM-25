@@ -5,6 +5,7 @@ import user from './routes/userRoutes.js'
 import cookieParser from 'cookie-parser'
 import order from './routes/orderRoutes.js'
 import cors from 'cors'
+import fileUpload from 'express-fileupload'
 
 const app = express()
 
@@ -18,10 +19,14 @@ app.use(cors(
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
-
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+  })
+);
 
 //routes
-
 app.use('/api/v1',product)
 app.use('/api/v1',user)
 app.use('/api/v1',order)

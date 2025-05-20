@@ -4,24 +4,35 @@ import User from "../models/userModel.js";
 import handleError from "../utlis/handleError.js";
 import { sendToken } from "../utlis/jwtToken.js";
 import { sendEmail } from "../utlis/sendEmail.js";
-import crypto from 'crypto'
+import crypto from 'crypto' 
+import {v2 as cloudinary} from 'cloudinary'
 
 export const registerUser=handleAsyncError(async(req,res,next)=>{
 console.log('inside register user')
+console.log('req.files',req.files)
+
 console.log(req.body)
     const{name,email,password}=req.body
-    console.log(name,email,password)
+    const avatar = req.files?.avatar
+    console.log({avatar})
+    const myCloud=await cloudinary.uploader.upload(avatar.tempFilePath,{
+        folder:'avatars',
+        width:150,
+        crop:'scale'
+    })
    const user = await User.create({
     name,
-    email,
+    email, 
     password,
     avatar:{
-        public_id:'temp_id',
-        url:'temp_url'
-    }})
-   if(!user){
+         public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    }}) 
+   if(!user){  
    return next(new handleError('user creation failed',400))
    }
+   console.log('success')
+   console.log(user)
 
 sendToken(user,201,res)
 

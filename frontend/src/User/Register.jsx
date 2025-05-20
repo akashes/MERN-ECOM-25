@@ -21,14 +21,24 @@ const Register = () => {
 
     const handleUserInput=(e)=>{
         if(e.target.name==='avatar'){
-            const reader=new FileReader()
-            reader.onload=()=>{
-                if(reader.readyState===2){
-                    setAvatarPreview(reader.result)
-                    setAvatar(reader.result)
-                }
+            // const reader=new FileReader()
+            // reader.onload=()=>{
+            //     if(reader.readyState===2){
+            //         setAvatarPreview(reader.result)
+            //         // setAvatar(reader.result)
+            //         // changing base64 string to file
+            //         // setAvatar(e.target.files[0])
+            //     }
+            // }
+            // reader.readAsDataURL(e.target.files[0])
+            const file = e.target.files[0]
+            if(file.size > 8*1024*1024){
+                toast.error('Image size should be less than 8MB',
+                {position:'top-center',autoClose:3000})
+                return
             }
-            reader.readAsDataURL(e.target.files[0])
+            setAvatar(file)
+            setAvatarPreview(URL.createObjectURL(file))
 
         }else{
             setUser((prev)=>({...prev,[e.target.name]:e.target.value}))
@@ -107,7 +117,7 @@ const Register = () => {
 
 
             </div>
-            <button className="authBtn">Sign Up</button>
+            <button className="authBtn">{loading?'Signing Up':'Sign Up'}</button>
             <p className="form-links">
                 Already have an account? <Link to='/login' >Sign in here</Link>
             </p>
