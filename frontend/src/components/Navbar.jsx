@@ -7,8 +7,10 @@ import  PersonAddIcon from '@mui/icons-material/PersonAdd'
 import  CloseIcon from '@mui/icons-material/Close'
 import MenuIcon from '@mui/icons-material/Menu'
 import '../pageStyles/Search.css'
+import { useSelector } from 'react-redux'
 
 const Navbar = () => {
+    const{isAuthenticated}=useSelector(state=>state.user)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const toggleMenu=()=>setIsMenuOpen(!isMenuOpen)
 
@@ -24,7 +26,6 @@ const Navbar = () => {
 
     const navigate = useNavigate()
 
-    const isAuthenticated = false
 
     const handleSearchSubmit=(e)=>{
         e.preventDefault()

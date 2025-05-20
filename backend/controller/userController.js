@@ -31,8 +31,7 @@ console.log(req.body)
    if(!user){  
    return next(new handleError('user creation failed',400))
    }
-   console.log('success')
-   console.log(user)
+ 
 
 sendToken(user,201,res)
 

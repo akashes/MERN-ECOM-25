@@ -49,6 +49,7 @@ const Login = () => {
         <form action="" className="form" onSubmit={loginSubmit}>
           <div className="input-group">
             <input
+            tabIndex={1}
               type="email"
               placeholder="Email"
               id=""
@@ -58,6 +59,7 @@ const Login = () => {
           </div>
           <div className="input-group">
             <input
+            tabIndex={2}
               type="password"
               placeholder="Password"
               id=""
