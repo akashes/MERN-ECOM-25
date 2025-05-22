@@ -146,6 +146,8 @@ export const resetPassword=handleAsyncError(async(req,res,next)=>{
 })
 
 export const getUserDetails=handleAsyncError(async(req,res,next)=>{
+    console.log('inside prfile controller')
+    console.log(req.user.id)
     const user = await User.findById(req.user.id)
     res.status(200).json({
         success:true,
@@ -176,11 +178,45 @@ export const updateUserProfile=handleAsyncError(async(req,res,next)=>{
 
     // can update name,email,profile picture
     const{name,email} = req.body
-
+    console.log(name,email)
+    //throw error if the email is already taken
+    const existingEmail = await User.findOne({email})
+    if(existingEmail && existingEmail._id.toString() !== req.user.id.toString()){
+        return next(new handleError('Email already exists',400))
+    }
+    
     const updateUserDetails={
         name,
-        email
+        email,
     }
+    const avatar = req.files?.avatar
+    // if(avatar){
+    //     const myCloud=await cloudinary.uploader.upload(avatar.tempFilePath,{
+    //         folder:'avatars',
+    //         width:150,
+    //         crop:'scale'
+    //     })
+    //     updateUserDetails.avatar={
+    //         public_id: myCloud.public_id,
+    //         url: myCloud.secure_url,
+    //       }
+
+    // }
+    if(avatar){
+        const user = await User.findById(req.user.id)
+        const imageId = user.avatar.public_id
+        await cloudinary.uploader.destroy(imageId)
+        const myCloud=await cloudinary.uploader.upload(avatar.tempFilePath,{
+            folder:'avatars',
+            width:150,
+            crop:'scale'
+        })
+         updateUserDetails.avatar={
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+    }
+    }
+   
     //not updating with the whole request body because we dont want to update password here
     const user = await User.findByIdAndUpdate(req.user.id,updateUserDetails,{
         new:true,
