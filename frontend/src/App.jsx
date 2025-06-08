@@ -10,6 +10,7 @@ import UserDashboard from './User/UserDashboard'
 import Profile from './User/Profile'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import UpdateProfile from './User/UpdateProfile'
+import UpdatePassword from './User/UpdatePassword'
 const Home = React.lazy(() => import('./pages/Home'))
 const App = () => {
   const{user,isAuthenticated}=useSelector(state=>state.user)
@@ -34,6 +35,9 @@ const App = () => {
     {/* <Route path='/profile' element={<ProtectedRoutes element={<Profile/>}   />} /> */}
     <Route path='/profile' element={<ProtectedRoutes><Profile/></ProtectedRoutes>} />
     <Route path='/profile/update' element={<ProtectedRoutes><UpdateProfile/></ProtectedRoutes>} />
+    <Route path='/profile/password/update' element={<ProtectedRoutes><UpdatePassword/></ProtectedRoutes>} />
+
+    
     
 
   </Routes>

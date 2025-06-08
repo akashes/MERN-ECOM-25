@@ -9,6 +9,7 @@ import { removeErrors, removeSuccess, updateProfile } from '../features/user/use
 import { toast } from 'react-toastify'
 import { useEffect } from 'react'
 import Loader from '../components/Loader'
+import PageTitle from '../components/PageTitle'
 
 const UpdateProfile = () => {
     const[name,setName]=useState('')
@@ -68,6 +69,7 @@ const UpdateProfile = () => {
         loading ? <Loader/> :(
               <>
     <Navbar/>
+    <PageTitle title='Update Password'/>
     <div className="container update-container">
         <div className="form-content">
             <form  className="form" encType='multipart/form-data' onSubmit={updateSubmit}>

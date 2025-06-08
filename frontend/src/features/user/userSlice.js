@@ -84,7 +84,20 @@ const updateProfile = createAsyncThunk('user/updateProfile',async(userData,{reje
         return rejectWithValue(error.response?.data || {message:'Failed to update profile. please try again later'})
     }
 })
-
+const updatePassword = createAsyncThunk('user/updatePassword',async(formData,{rejectWithValue})=>{
+    try {
+        console.log('inside update password slice')
+        console.log(formData)
+        const config={
+            'Content-Type':'application/json'
+        }
+     const{data}=   await axios.put('/api/v1/password/update',formData,config)
+     console.log(data)
+     return data
+    } catch (error) {
+        return rejectWithValue(error.response?.data || 'Failed to update password. please try again later')
+    }
+})
 
 const userSlice=createSlice({
     name:'user',
@@ -195,8 +208,25 @@ const userSlice=createSlice({
             // state.user=null,
             // state.isAuthenticated=false
         })
+        //update user password
+        builder.addCase(updatePassword.pending,(state)=>{
+            state.loading=true
+            state.error=null
+        })
+        .addCase(updatePassword.fulfilled,(state,action)=>{
+            state.loading=false,
+            state.error=null,
+            state.success=action.payload?.success
+        })
+        .addCase(updatePassword.rejected,(state,action)=>{
+            state.loading=false,
+            state.error = action.payload || 'Failed to update password.'
+        
+        })
     }
 })
-export {register,login,loadUser,logout,updateProfile}
+
+
+export {register,login,loadUser,logout,updateProfile,updatePassword}
 export const  {removeErrors,removeSuccess} = userSlice.actions
 export default userSlice.reducer

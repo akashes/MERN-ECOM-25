@@ -52,7 +52,7 @@ const Login = () => {
             tabIndex={1}
               type="email"
               placeholder="Email"
-              id=""
+              
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
             />
@@ -62,7 +62,7 @@ const Login = () => {
             tabIndex={2}
               type="password"
               placeholder="Password"
-              id=""
+              
               value={loginPassword}
               onChange={(e) => setLoginPassword(e.target.value)}
             />
