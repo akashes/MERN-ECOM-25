@@ -75,6 +75,7 @@ export const logout=handleAsyncError(async(req,res,next)=>{
 
 //forgot password 
 export const requestPasswordReset=handleAsyncError(async(req,res,next)=>{
+    console.log(req.body.email)
     const user =await User.findOne({email:req.body.email})
     if(!user){
         return next(new handleError('User not found',404))
@@ -91,7 +92,7 @@ export const requestPasswordReset=handleAsyncError(async(req,res,next)=>{
         return next(new handleError('Could not save reset token , please try again later',500))
         
     }
-    const resetPasswordURL = `http://localhost:8000/api/v1/reset/${resetToken}`;
+    const resetPasswordURL = `${req.protocol}://${req.get('host')}/reset/${resetToken}`;
     const message = `
       <p>Use the following link to reset your password:</p>
       <a href="${resetPasswordURL}" target="_blank">${resetPasswordURL}</a>

@@ -11,6 +11,8 @@ import Profile from './User/Profile'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import UpdateProfile from './User/UpdateProfile'
 import UpdatePassword from './User/UpdatePassword'
+import ForgotPassword from './User/ForgotPassword'
+import ResetPassword from './User/ResetPassword'
 const Home = React.lazy(() => import('./pages/Home'))
 const App = () => {
   const{user,isAuthenticated}=useSelector(state=>state.user)
@@ -38,6 +40,8 @@ const App = () => {
     <Route path='/profile/password/update' element={<ProtectedRoutes><UpdatePassword/></ProtectedRoutes>} />
 
     
+    <Route path='/password/forgot' element={<ForgotPassword/>} />
+    <Route path='/reset/:token' element={<ResetPassword/>} />
     
 
   </Routes>
