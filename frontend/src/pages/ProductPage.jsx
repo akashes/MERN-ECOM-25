@@ -10,18 +10,59 @@ import { getProduct, removeErrors } from '../features/products/productSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import { toast } from 'react-toastify'
+import { addItemsToCart, removeMessage } from '../features/cart/cartSlice'
 const ProductPage = () => {
      const[userRating,setUserRating]=useState(0)
      const dispatch = useDispatch()
+         const params = useParams()
+    const id = params.id
+
+     const{loading:cartLoading,error:cartError,success:cartSuccess,message:cartMessage,cartItems}=useSelector((state)=>state.cart)
+     let itemQuantity = cartItems.find(i=>i.product===id)? cartItems.find(i=>i.product===id).quantity :1;
+     const [quantity,setQuantity]=useState(itemQuantity)
+   
 
         const handleRatingChange=(newRating)=>{
             setUserRating(newRating)
         }
-    const params = useParams()
-    const id = params.id
+        const decreaseQuantity=()=>{
+            if(quantity<=1){
+                  toast.error('Quantity cannot be less than 1!',
+                    {
+                        position:'top-center',autoClose:3000
+                    }
+                )
+                dispatch(removeErrors())
+                return;
+            }
+            setQuantity(qty=>qty-1)
+
+        }
+        const increaseQuantity=()=>{
+            if(product.stock<=quantity){
+                toast.error('Cannot exceed available stock!',
+                    {
+                        position:'top-center',autoClose:3000
+                    }
+                )
+                dispatch(removeErrors())
+                return;
+            }
+
+                setQuantity(qty=>qty+1)
+
+            
+            
+
+        }
+
 
     const {product,error,loading}=useSelector((state)=>state.product)
+    console.log(cartItems)
   
+    const addToCart=()=>{
+        dispatch(addItemsToCart({productId:id,quantity}))
+    }
 
     useEffect(()=>{
 
@@ -43,7 +84,24 @@ const ProductPage = () => {
           })
           dispatch(removeErrors())
         }
-      },[dispatch,error])
+        if(cartError){
+          toast.error(cartError,{
+            position:'top-center',
+            autoClose:3000
+          })
+        }
+      },[dispatch,error,cartError])
+      useEffect(()=>{
+    
+        if(cartSuccess){
+          toast.success(cartMessage,{
+            position:'top-center',
+            autoClose:3000
+          })
+          dispatch(removeMessage())
+        }
+       
+      },[dispatch,cartSuccess,cartMessage])
 
     if(loading){
       return (
@@ -107,12 +165,12 @@ const ProductPage = () => {
                         <span className="quantity-label">
                             Quantity :
                         </span>
-                        <button className="quantity-button">-</button>
-                        <input type="text" value={1} className='quantity-value' readOnly   />
-                        <button className="quantity-button">+</button>
+                        <button className="quantity-button" onClick={decreaseQuantity} >-</button>
+                        <input type="text" value={quantity} className='quantity-value' readOnly   />
+                        <button className="quantity-button" onClick={increaseQuantity}>+</button>
                     
                      </div>
-                     <button className="add-to-cart-btn">Add to Cart</button>
+                     <button className="add-to-cart-btn" onClick={addToCart} disabled={cartLoading} >{cartLoading?'Adding':"Add to Cart"}</button>
                   </>
                    
                    }

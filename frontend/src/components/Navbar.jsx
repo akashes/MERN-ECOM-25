@@ -10,6 +10,7 @@ import '../pageStyles/Search.css'
 import { useSelector } from 'react-redux'
 
 const Navbar = () => {
+    const{cartItems}=useSelector(state=>state.cart)
     const{isAuthenticated}=useSelector(state=>state.user)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const toggleMenu=()=>setIsMenuOpen(!isMenuOpen)
@@ -75,7 +76,7 @@ const Navbar = () => {
                 <div className="cart-container">
                     <Link to='/cart'>
                     <ShoppingCart className='icon'/>
-                    <span className="cart-badge">6</span>
+                    <span className="cart-badge">{cartItems.length}</span>
                         </Link>
                 </div>
                 {
