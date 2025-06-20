@@ -14,6 +14,9 @@ import UpdatePassword from './User/UpdatePassword'
 import ForgotPassword from './User/ForgotPassword'
 import ResetPassword from './User/ResetPassword'
 import Cart from './Cart/Cart'
+import Shipping from './Cart/Shipping'
+import OrderConfirm from './Cart/OrderConfirm'
+import Payment from './Cart/Payment'
 const Home = React.lazy(() => import('./pages/Home'))
 const App = () => {
   const{user,isAuthenticated}=useSelector(state=>state.user)
@@ -45,6 +48,9 @@ const App = () => {
     <Route path='/reset/:token' element={<ResetPassword/>} />
 
     <Route path='/cart' element={<Cart/>} />
+    <Route path='/shipping' element={<ProtectedRoutes><Shipping/></ProtectedRoutes>} />
+    <Route path='/order/confirm' element={<ProtectedRoutes><OrderConfirm/></ProtectedRoutes>} />
+    <Route path='/process/payment' element={<ProtectedRoutes><Payment/></ProtectedRoutes>} />
 
 
     

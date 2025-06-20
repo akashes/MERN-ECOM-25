@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../UserStyles/Form.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, removeErrors, removeSuccess } from "../features/user/userSlice";
 import { toast } from "react-toastify";
@@ -10,6 +10,11 @@ const Login = () => {
   const { error, loading, success, isAuthenticated } = useSelector(
     (state) => state.user
   );
+  const location = useLocation()
+
+  const redirect = new URLSearchParams(location.search).get('redirect')|| '/'
+
+  console.log(redirect)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -30,9 +35,12 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      console.log(`redirecting to ${redirect}`)
+      navigate(redirect,{replace:true});
     }
   }, [isAuthenticated]);
+
+
   useEffect(() => {
     if (success) {
       toast.success("Login Successful", {
@@ -40,9 +48,10 @@ const Login = () => {
         autoClose: 3000,
       });
       dispatch(removeSuccess());
-      navigate("/");
+      // navigate("/");
     }
   }, [dispatch, success]);
+
   return (
     <div className="form-container container">
       <div className="form-content">

@@ -5,8 +5,9 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CartItem from './CartItem'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 const Cart = () => {
+    const navigate  = useNavigate()
 
     const{cartItems}=useSelector(state=>state.cart)
     const subTotal = cartItems.reduce((acc,currItem)=>acc+(currItem.price*currItem.quantity),0)
@@ -16,11 +17,16 @@ const Cart = () => {
 
     //shipping price
 
-    const shipping = subTotal>500 ? 0 : 50
+    const shippingCharges = subTotal>500 ? 0 : 50
 
     //total price
-    const totalPrice = subTotal+tax+shipping
+    const totalPrice = subTotal+tax+shippingCharges
     
+    const checkoutHandler =()=>{
+        navigate(`/login?redirect=/shipping`)
+
+
+    }
   return (
   
     <>
@@ -78,7 +84,7 @@ const Cart = () => {
         </div>
         <div className="summary-item">
             <p className="summary-label">Shipping</p>
-        <p className="summary-value">{shipping}/-</p>
+        <p className="summary-value">{shippingCharges}/-</p>
 
         </div>
         <div className="summary-total">
@@ -86,7 +92,7 @@ const Cart = () => {
         <p className="total-value">{totalPrice}/-</p>
 
         </div>
-        <button className="checkout-btn">
+        <button className="checkout-btn" onClick={checkoutHandler}>
             Proceed to Checkout
         </button>
     </div>
