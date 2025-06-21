@@ -17,6 +17,7 @@ import Cart from './Cart/Cart'
 import Shipping from './Cart/Shipping'
 import OrderConfirm from './Cart/OrderConfirm'
 import Payment from './Cart/Payment'
+import PaymentSuccess from './Cart/PaymentSuccess'
 const Home = React.lazy(() => import('./pages/Home'))
 const App = () => {
   const{user,isAuthenticated}=useSelector(state=>state.user)
@@ -51,6 +52,7 @@ const App = () => {
     <Route path='/shipping' element={<ProtectedRoutes><Shipping/></ProtectedRoutes>} />
     <Route path='/order/confirm' element={<ProtectedRoutes><OrderConfirm/></ProtectedRoutes>} />
     <Route path='/process/payment' element={<ProtectedRoutes><Payment/></ProtectedRoutes>} />
+    <Route path='/paymentSuccess' element={<ProtectedRoutes><PaymentSuccess/></ProtectedRoutes>} />
 
 
     
