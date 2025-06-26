@@ -6,13 +6,14 @@ import PageTitle from '../components/PageTitle'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Rating from '../components/Rating'
-import { getProduct, removeErrors } from '../features/products/productSlice'
+import { createReview, getProduct, removeErrors, removeSuccess } from '../features/products/productSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import { toast } from 'react-toastify'
 import { addItemsToCart, removeMessage } from '../features/cart/cartSlice'
 const ProductPage = () => {
      const[userRating,setUserRating]=useState(0)
+     const[comment,setComment]=useState('')
      const dispatch = useDispatch()
          const params = useParams()
     const id = params.id
@@ -57,7 +58,7 @@ const ProductPage = () => {
         }
 
 
-    const {product,error,loading}=useSelector((state)=>state.product)
+    const {product,error,loading,reviewSuccess,reviewLoading}=useSelector((state)=>state.product)
     console.log(cartItems)
   
     const addToCart=()=>{
@@ -103,7 +104,35 @@ const ProductPage = () => {
        
       },[dispatch,cartSuccess,cartMessage])
 
-    if(loading){
+
+    console.log(product)
+
+    const handleSubmitReview=(e)=>{
+        e.preventDefault(); 
+        if(!userRating){
+          toast.error('Please select a rating before submitting your review', {
+            position: 'top-center',
+            autoClose: 3000
+          })
+          return;
+        }
+        dispatch(createReview({rating:userRating,comment,productId:id}))
+    }
+
+    useEffect(()=>{
+        if(reviewSuccess){
+          toast.success('Review submitted successfully!',{
+            position: 'top-center',
+            autoClose: 3000
+          })
+          setUserRating(0)
+          setComment('')
+          dispatch(removeSuccess())
+          dispatch(getProduct(id)) // Refresh product details to show new review
+        }
+        },[dispatch,reviewSuccess,id])
+
+            if(loading){
       return (
 
           <>
@@ -123,8 +152,6 @@ const ProductPage = () => {
         </>
       )
     }
-
-    console.log(product)
 
   return (
     <>
@@ -174,15 +201,15 @@ const ProductPage = () => {
                   </>
                    
                    }
-                     <form  className="review-form">
+                     <form  className="review-form" onSubmit={handleSubmitReview}>
                         <h3>Write a Review</h3>
                         <Rating value={0}
                          disabled={false} 
                          onRatingChange={handleRatingChange}
                         />
-                        <textarea className='review-input' placeholder='write your review here'></textarea>
-                        <button className="submit-review-btn">
-                            Submit Review
+                        <textarea  required value={comment} onChange={(e)=>setComment(e.target.value)}  className='review-input' placeholder='write your review here'></textarea>
+                        <button className="submit-review-btn" disabled={reviewLoading} type='submit'>
+                            { reviewLoading?'Submitting': 'Submit Review'}
                         </button>
                      </form>
             </div>

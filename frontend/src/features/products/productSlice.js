@@ -9,6 +9,8 @@ const initialState={
     product:null,
     resultsPerPage:4,
     totalPages:0,
+    reviewSuccess:false,
+    reviewLoading:false
 }
 const fetchProducts=createAsyncThunk('product/fetchProducts',async({keyword,page=1,category},{rejectWithValue})=>{
     
@@ -49,12 +51,34 @@ const getProduct = createAsyncThunk('product/getProduct',async(id,{rejectWithVal
     }
 })
 
+//create review
+const createReview = createAsyncThunk('product/createReview',async({rating,comment,productId},{rejectWithValue})=>{
+    console.log('inside create review thunk')
+    console.log(rating,comment,productId)
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        const {data} = await axios.put(`/api/v1/reviews`,{rating,comment,productId},config)
+        return data
+    } catch (error) {
+        console.log(error)
+        return rejectWithValue(error.response?.data || 'An error occurred while creating review')
+    }
+})
+
+
 const productSlice = createSlice({
     name:'product',
     initialState,
     reducers:{
         removeErrors:(state)=>{
             state.error = null
+        },
+        removeSuccess:(state)=>{
+            state.reviewSuccess = false
         }
 
     },
@@ -90,10 +114,23 @@ const productSlice = createSlice({
         builder.addCase(getProduct.rejected,(state,action)=>{
             state.loading = false
             state.error = action.payload || 'something went wrong'
+        }),
+        builder.addCase(createReview.pending,(state)=>{
+            state.reviewLoading = true
+            state.error = null
+        }),
+        builder.addCase(createReview.fulfilled,(state,action)=>{
+            state.reviewLoading = false
+            state.reviewSuccess = true
+            state.error = null
+        }),
+        builder.addCase(createReview.rejected,(state,action)=>{
+            state.reviewLoading = false
+            state.error = action.payload || 'something went wrong'
         })
 
     }
 })
-export {fetchProducts,getProduct}
-export const {removeErrors} = productSlice.actions
+export {fetchProducts,getProduct,createReview}
+export const {removeErrors,removeSuccess} = productSlice.actions
 export default productSlice.reducer

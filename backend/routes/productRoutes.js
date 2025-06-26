@@ -20,7 +20,7 @@ router.route('/admin/products/:id')
 .put(verifyUserAuth,roleBasedAccess('admin'), updateProduct)
 .delete(verifyUserAuth,roleBasedAccess('admin'), deleteProduct)
 
-router.route('/reviews').post(verifyUserAuth,createProductReview)
+router.route('/reviews').put(verifyUserAuth,createProductReview)
 router.route('/reviews').get(getProductReviews) //accepts product id as query
 router.route('/reviews').delete(verifyUserAuth,deleteReview) //accepts product id as query
 export default router

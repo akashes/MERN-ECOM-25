@@ -118,7 +118,9 @@ res.status(200).json({
 
 //create and update user review
 export const createProductReview=handleAsyncError(async(req,res,next)=>{
+  console.log('inside create product review')
   const{comment,rating,productId}=req.body
+  console.log(comment,rating,productId)
 
   const reviewObject={
     user:req.user.id,

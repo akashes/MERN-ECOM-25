@@ -50,6 +50,7 @@ const login = createAsyncThunk('user/login',async({email,password},{rejectWithVa
 
 const loadUser = createAsyncThunk('user/loadUser',async(_,{rejectWithValue})=>{
     try {
+        console.log('load user slice')
         const{data}=await axios.get('/api/v1/profile')
         return data
         
