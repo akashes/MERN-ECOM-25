@@ -1,0 +1,85 @@
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import axios from 'axios'
+
+
+const INITIAL_STATE ={
+    products:[],
+    // success:false,
+    loading:false,
+    error:null
+}
+
+
+
+// fetch all products
+export const fetchAdminProducts = createAsyncThunk('admin/fetchAdminProducts',async(_,{rejectWithValue})=>{
+    try {
+        const {data}=await axios.get('/api/v1/admin/products')
+        return data
+        
+    } catch (error) {
+        return rejectWithValue(error.response?.data|| 'Error while Fetching the products')
+    }
+})
+
+//create a product
+export const createProduct = createAsyncThunk('admin/createProduct',async(productData,{rejectWithValue})=>{
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        const {data} = await axios.post('/api/v1/admin/products',productData,config)
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response?.data || 'Error while creating the product')
+    }
+})
+
+const adminSlice = createSlice({
+
+    name:"admin",
+    initialState:INITIAL_STATE,
+    reducers:{
+        removeErrors:(state)=>{
+            state.error=null
+        },
+        removeSuccess:(state)=>{
+            state.success=false
+        }
+    },
+    extraReducers:(builder)=>{
+        builder.addCase(fetchAdminProducts.pending,(state)=>{
+            state.loading = true
+            state.error=null
+        })
+        .addCase(fetchAdminProducts.fulfilled,(state,action)=>{
+            state.loading = false,
+            state.error = null
+            state.products = action.payload.products
+        })
+        .addCase(fetchAdminProducts.rejected,(state,action)=>{
+            state.loading = false,
+            state.error = action.payload?.message || 'Error while Fetching the products' 
+        })
+        builder.addCase(createProduct.pending,(state)=>{
+            state.loading = true
+            state.error = null
+        })
+        .addCase(createProduct.fulfilled,(state,action)=>{
+            state.loading = false
+            state.error = null
+            state.success = action.payload.success
+            state.products.push(action.payload.product)
+        })
+        .addCase(createProduct.rejected,(state,action)=>{       
+            state.loading = false
+            state.error = action.payload?.message || 'Error while creating the product'
+        })
+
+    }
+})
+
+export const {removeErrors,removeSuccess}= adminSlice.actions
+export default adminSlice.reducer

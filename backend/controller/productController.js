@@ -3,8 +3,32 @@ import handleError from "../utlis/handleError.js";
 import handleAsyncError from "../middleware/handleAsyncError.js";
 import APIFunctionality from "../utlis/apiFunctionality.js";
 import User from "../models/userModel.js";
+import { v2 as cloudinary } from "cloudinary";
 //create product
 export const createProduct = handleAsyncError(async (req, res, next) => {
+  let image = [];
+
+  if(typeof req.body.image === 'string'){
+    image.push(req.body.image)
+  }else{
+    image = req.body.image;
+  }
+
+  const imageLinks = []
+  for(let i=0;i<image.length;i++){
+    const result = await cloudinary.uploader.upload(image[i],{
+      folder:'products',
+      width:150,
+      crop:'scale'
+    })
+
+    imageLinks.push({
+      public_id: result.public_id,
+      url: result.secure_url
+    })
+  }
+  req.body.image = imageLinks;
+
    req.body.user = req.user.id
   const product = await Product.create(req.body);
   res.status(201).json({

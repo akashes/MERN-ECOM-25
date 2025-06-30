@@ -20,6 +20,9 @@ import Payment from "./Cart/Payment";
 import PaymentSuccess from "./Cart/PaymentSuccess";
 import MyOrders from "./Orders/MyOrders";
 import OrderDetails from "./Orders/OrderDetails";
+import Dashboard from "./Admin/Dashboard";
+import ProductsList from "./Admin/productsList";
+import CreateProduct from "./Admin/CreateProduct";
 const Home = React.lazy(() => import("./pages/Home"));
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -112,6 +115,18 @@ const App = () => {
             }
           />
           <Route path='/orders/:orderId' element={<ProtectedRoutes><OrderDetails/></ProtectedRoutes>} />
+
+         {/* Admin Routes */}
+          <Route path='/admin/dashboard' element={<ProtectedRoutes adminOnly={true}><Dashboard/></ProtectedRoutes>} />
+          <Route path='/admin/products' element={<ProtectedRoutes adminOnly={true}><ProductsList/></ProtectedRoutes>} />
+          <Route path='/admin/products/create' element={<ProtectedRoutes adminOnly={true}><CreateProduct/></ProtectedRoutes>} />
+
+
+
+
+
+
+
         </Routes>
         {isAuthenticated && <UserDashboard user={user} />}
       </Suspense>
