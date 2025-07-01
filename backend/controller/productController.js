@@ -6,30 +6,31 @@ import User from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
 //create product
 export const createProduct = handleAsyncError(async (req, res, next) => {
-  let image = [];
+  console.log('inside create product')
+  let images=[]
+  if(Array.isArray(req.files.image)){
 
-  if(typeof req.body.image === 'string'){
-    image.push(req.body.image)
+    images = req.files.image
   }else{
-    image = req.body.image;
+    images.push(req.files.image)
   }
 
-  const imageLinks = []
-  for(let i=0;i<image.length;i++){
-    const result = await cloudinary.uploader.upload(image[i],{
-      folder:'products',
-      width:150,
-      crop:'scale'
-    })
+  const imageLinks = [];
 
+  for(let i=0;i<images.length;i++){
+    const result = await cloudinary.uploader.upload(images[i].tempFilePath,{
+      folder: "products",
+      // width: 150,
+      // crop: "scale",
+    })
     imageLinks.push({
       public_id: result.public_id,
-      url: result.secure_url
+      url: result.secure_url,
     })
   }
   req.body.image = imageLinks;
 
-   req.body.user = req.user.id
+  req.body.user = req.user.id; 
   const product = await Product.create(req.body);
   res.status(201).json({
     success: true,

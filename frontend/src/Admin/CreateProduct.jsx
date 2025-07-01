@@ -28,41 +28,51 @@ const CreateProduct = () => {
     "toys",
     "books",
     "laptop",
+    "bag"
   ];
 
 
+//   const createProductImage = (e) => {
+    
+
+  
+//     const files = Array.from(e.target.files);
+
+//     setImage([])
+//     setPreview([]);
+
+//     files.forEach((file)=>{
+//         const reader = new FileReader()
+//         reader.onload = () => {
+//             if (reader.readyState === 2) {
+//                 setImage((old) => [...old, reader.result]);
+//                 setPreview((old) => [...old, reader.result]);
+//             }
+//         };
+//         reader.readAsDataURL(file);
+//     })
+
+
+//   }
   const createProductImage = (e) => {
     
 
   
     const files = Array.from(e.target.files);
 
-    setImage([])
+    setImage(files)
     setPreview([]);
 
+
     files.forEach((file)=>{
-        const reader = new FileReader()
-        reader.onload = () => {
-            if (reader.readyState === 2) {
-                setImage((old) => [...old, reader.result]);
-                setPreview((old) => [...old, reader.result]);
-            }
-        };
-        reader.readAsDataURL(file);
+        const imageUrl = URL.createObjectURL(file);
+        setPreview((old) => [...old, imageUrl]);
     })
 
 
   }
 
-//   useEffect(() => {
-//     if (image.length > 0) {
-//       const previewImage = Array.from(image).map((file) =>
-//         URL.createObjectURL(file)
-//       );
-//       setPreview(previewImage);
-//     }
-//   }, [image]);
-  console.log(image);
+
 
   const createProductSubmit=(e)=>{
     e.preventDefault();
@@ -102,6 +112,7 @@ const CreateProduct = () => {
     }
     
 },[dispatch,success,error])
+
 
 
   return (
@@ -166,7 +177,7 @@ const CreateProduct = () => {
               onChange={createProductImage}
               type="file"
               id=""
-              accept="image/"
+              accept="image/*"
               className="form-input-file"
               multiple
               name="image"
