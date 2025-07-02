@@ -171,10 +171,16 @@ export const updateProduct = handleAsyncError(async (req, res, next) => {
 
 //delete product
 export const deleteProduct = handleAsyncError( async (req, res, next) => {
+
+
   
-    const product = await Product.findByIdAndDelete(req.params.id);
+    let product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
       return next(new handleError("product not found", 404));
+    }
+
+    for(let i=0;i<product.image.length;i++){
+      await cloudinary.uploader.destroy(product.image[i].public_id)
     }
 
     res.status(200).json({
