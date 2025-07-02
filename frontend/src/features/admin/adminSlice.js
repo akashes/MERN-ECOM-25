@@ -10,7 +10,8 @@ const INITIAL_STATE ={
     product:{},
     deleting:{},
     users:[],
-    user:{}
+    user:{},
+    message:null
 }
 
 
@@ -100,6 +101,16 @@ export const updateUserRole = createAsyncThunk('admin/updateUserRole',async({use
     }
 })
 
+// delete user
+export const deleteUser = createAsyncThunk('admin/deleteUser',async(userId,{rejectWithValue})=>{
+    try {
+        const{data}=await axios.delete(`/api/v1/admin/users/${userId}`)
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response?.message||'Failed to delete User')
+    }
+})
+
 const adminSlice = createSlice({
 
     name:"admin",
@@ -110,6 +121,9 @@ const adminSlice = createSlice({
         },
         removeSuccess:(state)=>{
             state.success=false
+        },
+        clearMessage:(state)=>{
+            state.message=null
         }
     },
     extraReducers:(builder)=>{
@@ -215,8 +229,25 @@ const adminSlice = createSlice({
             state.loading=false
             state.error = action.payload?.message || 'Failed to Update User Role!'
         })
+          builder.addCase(deleteUser.pending,(state,action)=>{
+            state.loading=true
+            state.error=null
+        })
+        .addCase(deleteUser.fulfilled,(state,action)=>{
+
+            state.loading = false
+
+            state.success = action.payload.success
+            state.users = state.users.filter(user => user._id !== action.meta.arg)
+            state.error = null
+            state.message = action.payload.message
+        })
+        .addCase(deleteUser.rejected,(state,action)=>{    
+            state.loading=false
+            state.error = action.payload?.message || 'Failed to delete User'
+        })
     }
 })
 
-export const {removeErrors,removeSuccess}= adminSlice.actions
+export const {removeErrors,removeSuccess,clearMessage}= adminSlice.actions
 export default adminSlice.reducer

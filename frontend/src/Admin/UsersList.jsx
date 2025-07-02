@@ -5,21 +5,36 @@ import Footer from '../components/Footer'
 import { Delete, Edit } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { fetchUsers, removeErrors } from '../features/admin/adminSlice'
+import { clearMessage, deleteUser, fetchUsers, removeErrors } from '../features/admin/adminSlice'
 import PageTitle from '../components/PageTitle'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
 import { toast } from 'react-toastify'
+import Spinner from '../components/Spinner'
 
 
 
 const UsersList = () => {
 
-    const{users,loading,error}=useSelector(state=>state.admin)
+    const{users,loading,error,message}=useSelector(state=>state.admin)
     console.log(users)
     const dispatch = useDispatch()
 
+    const navigate = useNavigate()
     
+    const handleDeleteUser=(userId)=>{
+        const confirm = window.confirm('Are you sure you want to delete this user?')
+        if(confirm){
+
+            dispatch(deleteUser(userId))
+            setTimeout(() => {
+                
+                navigate('/admin/dashboard')
+            }, 2000);
+
+        }
+
+    }
 
 
     useEffect(()=>{
@@ -31,9 +46,13 @@ const UsersList = () => {
             toast.error(error,{position:'top-center',autoClose:3000})
             dispatch(removeErrors())
         }
+        if(message){
+            toast.success(message,{position:'top-center',autoClose:3000})
+            dispatch(clearMessage())
+        }
 
 
-    },[dispatch,error])
+    },[dispatch,error,message])
 
   return (
     <>
@@ -66,7 +85,7 @@ const UsersList = () => {
                         <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                         <td>
                             <Link to={`/admin/user/${user._id}`} className='action-icon edit-icon'><Edit/></Link>
-                            <button className='action-icon delete-icon'><Delete/></button>
+                            <button onClick={()=>handleDeleteUser(user._id)} className='action-icon delete-icon'>  <Delete/> </button>
                         </td>
                     </tr>
 
