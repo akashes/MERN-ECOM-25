@@ -23,6 +23,7 @@ import OrderDetails from "./Orders/OrderDetails";
 import Dashboard from "./Admin/Dashboard";
 import ProductsList from "./Admin/productsList";
 import CreateProduct from "./Admin/CreateProduct";
+import UpdateProduct from "./Admin/UpdateProduct";
 const Home = React.lazy(() => import("./pages/Home"));
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -120,6 +121,7 @@ const App = () => {
           <Route path='/admin/dashboard' element={<ProtectedRoutes adminOnly={true}><Dashboard/></ProtectedRoutes>} />
           <Route path='/admin/products' element={<ProtectedRoutes adminOnly={true}><ProductsList/></ProtectedRoutes>} />
           <Route path='/admin/products/create' element={<ProtectedRoutes adminOnly={true}><CreateProduct/></ProtectedRoutes>} />
+          <Route path='/admin/product/:updateId' element={<ProtectedRoutes adminOnly={true}><UpdateProduct/></ProtectedRoutes>} />
 
 
 

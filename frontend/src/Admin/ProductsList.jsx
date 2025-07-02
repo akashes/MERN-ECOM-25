@@ -74,8 +74,8 @@ const productsList = () => {
                     <td>{product.stock}</td>
                     <td>{new Date(product.createdAt).toLocaleString()}</td>
                     <td>
-                        <Link to={`/admin/product/:${product._id}`} className='action-icon edit-icon' ><Edit/></Link>
-                        <Link to={`/admin/product/:${product._id}`} className='action-icon delete-icon' ><Delete/></Link>
+                        <Link to={`/admin/product/${product._id}`} className='action-icon edit-icon' ><Edit/></Link>
+                        <Link to={`/admin/product/${product._id}`} className='action-icon delete-icon' ><Delete/></Link>
                     </td>
                 </tr>
 

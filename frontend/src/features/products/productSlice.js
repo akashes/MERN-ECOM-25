@@ -79,6 +79,9 @@ const productSlice = createSlice({
         },
         removeSuccess:(state)=>{
             state.reviewSuccess = false
+        },
+        resetProduct:(state)=>{
+            state.product = null
         }
 
     },
@@ -132,5 +135,5 @@ const productSlice = createSlice({
     }
 })
 export {fetchProducts,getProduct,createReview}
-export const {removeErrors,removeSuccess} = productSlice.actions
+export const {removeErrors,removeSuccess,resetProduct} = productSlice.actions
 export default productSlice.reducer

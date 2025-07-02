@@ -4,6 +4,7 @@ import handleAsyncError from "../middleware/handleAsyncError.js";
 import APIFunctionality from "../utlis/apiFunctionality.js";
 import User from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
+// import products from "razorpay/dist/types/products.js";
 //create product
 export const createProduct = handleAsyncError(async (req, res, next) => {
   console.log('inside create product')
@@ -75,17 +76,91 @@ export const getAllProducts = handleAsyncError(async (req, res, next) => {
 //update product
 export const updateProduct = handleAsyncError(async (req, res, next) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!product) {
-      return next(new handleError("product not found", 404));
+
+    let product = await Product.findById(req.params.id);
+
+    if(!product){
+      return next(new handleError('Product Not Found',404))
     }
+
+   let  images = Array.isArray(req.files?.image)?
+    req.files.image:
+    req.files?.image?
+    [req.files.image]:
+    [];
+
+    if(images.length>0){
+      for(let i=0;i<product.image.length;i++){
+        await cloudinary.uploader.destroy(product.image[i].public_id)
+      }
+      const imageLinks = []
+      for(let i=0;i<images.length;i++){
+        const result = await cloudinary.uploader.upload(images[i].tempFilePath,{
+          folder:'products'
+        })
+        imageLinks.push({
+         public_id: result.public_id,
+         url: result.secure_url
+        })
+      }
+      console.log(imageLinks)
+      req.body = req.body || {};
+      req.body.image=imageLinks
+    }
+
+    product = await Product.findByIdAndUpdate(req.params.id,req.body,{
+      new:true,
+      runValidators:true
+    })
+
     res.status(200).json({
-      success: true,
-      product,
-    });
+    success:true,
+    product
+    })
+
+
+  //   const product = await Product.findById(req.params.id)
+  //   const images = []
+  //   if(Array.isArray(req.files.image)){
+
+  //     images=req.files
+  //   }else{
+  //     images.push(req.files.image)
+
+  //   }
+  //   const imageLinks = []
+  //   for(let i=0;i<images.length;i++){
+  //     const result = await cloudinary.uploader.upload(images[i].tempFilePath,{
+  //       folder:'products'
+  //     })
+  //     imageLinks.push({
+  //       public_id:result.public_id,
+  //       url:result.secure_url
+  //     })
+  //   }
+  //   const allImageLinks=[...imageLinks,...product.image]
+
+  // let  updateBody ={...req.body,image:allImageLinks}
+  //   const updatedProduct = await Product.findByIdAndUpdate(req.params.id,updateBody,{
+  //     new:true,
+  //     runValidators:true
+  //   })
+ 
+
+    
+    // const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    //   new: true,
+    //   runValidators: true,
+    // });
+    // if (!product) {
+    //   return next(new handleError("product not found", 404));
+    // }
+ 
+
+
+
+
+
     // let  product = await Product.findById(req.params.id)
   } catch (error) {
     console.log(error);
