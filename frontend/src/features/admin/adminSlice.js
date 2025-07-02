@@ -9,7 +9,8 @@ const INITIAL_STATE ={
     error:null,
     product:{},
     deleting:{},
-    users:[]
+    users:[],
+    user:{}
 }
 
 
@@ -68,11 +69,34 @@ export const deleteProduct = createAsyncThunk('admin/deleteProduct',async(id,{re
 
 //fetch all users
 export const fetchUsers = createAsyncThunk('admin/fetchUsers',async(_,{rejectWithValue})=>{
+    console.log('inside fetch users thunk')
     try {
         const {data}=await axios.get('/api/v1/admin/users')
         return data
     } catch (error) {
         return rejectWithValue(error.response?.message|| 'Failed to fetch all Users data')
+    }
+})
+
+// fetch User
+export const getSingleUser =createAsyncThunk('admin/getSingleUser',async(id,{rejectWithValue})=>{
+    console.log('inside get single user thunk')
+    try {
+        const{data}=await axios.get(`/api/v1/admin/users/${id}`)
+        console.log('inside get single user thunk')
+        console.log(data)
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response?.message || 'Failed to fetch User data')
+    }
+})
+
+export const updateUserRole = createAsyncThunk('admin/updateUserRole',async({userId,role},{rejectWithValue})=>{
+    try {
+        const {data} = await axios.put(`/api/v1/admin/users/${userId}`,{role})
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response?.message || 'Failed to update User role')
     }
 })
 
@@ -146,6 +170,7 @@ const adminSlice = createSlice({
 
             state.error = action.payload?.message || 'Product deletion failed!'
         })
+        
         builder.addCase(fetchUsers.pending,(state,action)=>{
             state.loading=true
             state.error=null
@@ -161,7 +186,35 @@ const adminSlice = createSlice({
 
             state.error = action.payload?.message || 'Failed to fetch Users!'
         })
+        builder.addCase(getSingleUser.pending,(state,action)=>{
+            state.loading=true
+            state.error=null
+        })
+        .addCase(getSingleUser.fulfilled,(state,action)=>{
 
+            state.loading = false
+            state.user = action.payload.user
+            state.error = null
+        })
+        .addCase(getSingleUser.rejected,(state,action)=>{    
+            state.loading=false
+            state.error = action.payload?.message || 'Failed to fetch User!'
+        })
+          builder.addCase(updateUserRole.pending,(state,action)=>{
+            state.loading=true
+            state.error=null
+        })
+        .addCase(updateUserRole.fulfilled,(state,action)=>{
+
+            state.loading = false
+
+            state.success = action.payload.success
+            state.error = null
+        })
+        .addCase(updateUserRole.rejected,(state,action)=>{    
+            state.loading=false
+            state.error = action.payload?.message || 'Failed to Update User Role!'
+        })
     }
 })
 

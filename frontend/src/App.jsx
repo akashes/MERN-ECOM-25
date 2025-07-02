@@ -25,6 +25,7 @@ import ProductsList from "./Admin/productsList";
 import CreateProduct from "./Admin/CreateProduct";
 import UpdateProduct from "./Admin/UpdateProduct";
 import UsersList from "./Admin/UsersList";
+import UpdateRole from "./Admin/UpdateRole";
 const Home = React.lazy(() => import("./pages/Home"));
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -124,6 +125,7 @@ const App = () => {
           <Route path='/admin/products/create' element={<ProtectedRoutes adminOnly={true}><CreateProduct/></ProtectedRoutes>} />
           <Route path='/admin/product/:updateId' element={<ProtectedRoutes adminOnly={true}><UpdateProduct/></ProtectedRoutes>} />
           <Route path='/admin/users' element={<ProtectedRoutes adminOnly={true}><UsersList/></ProtectedRoutes>} />
+          <Route path='/admin/user/:userId' element={<ProtectedRoutes adminOnly={true}><UpdateRole/></ProtectedRoutes>} />
 
 
 
