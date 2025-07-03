@@ -100,7 +100,7 @@ export const updateOrderStatus= handleAsyncError(async(req,res,next)=>{
 async function updateStock(productId,quantity){
     const product = await Product.findById(productId)
     if(!product){
-        return next(new handleError('Product not found',404))
+        throw new Error('Product not found')
     }
     product.stock -= quantity
     await product.save({validateBeforeSave:false})
