@@ -275,12 +275,15 @@ export const createProductReview=handleAsyncError(async(req,res,next)=>{
 })})
 
 export const getProductReviews=handleAsyncError(async(req,res,next)=>{
+  console.log('fetching product reviews')
   const product = await Product.findById(req.query.id)
   if(!product){
 
       return next(new handleError('Product not found',404))
 
   }
+  console.log('successfully fetched product reviews')
+  console.log(product.reviews)
 
   res.status(200).json({
     success:true,

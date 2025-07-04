@@ -14,7 +14,8 @@ const INITIAL_STATE ={
     message:null,
     orders:[],
     totalAmount:0,
-    order:{}
+    order:{},
+    reviews:[]
 }
 
 
@@ -147,6 +148,26 @@ export const updateOrderStatus=createAsyncThunk('admin/updateOrderStatus',async(
         
     } catch (error) {
         return rejectWithValue(error.response?.data || 'Failed to Update Order status')
+    }
+})
+export const fetchProductReviews=createAsyncThunk('admin/fetchProductReviews',async(productId,{rejectWithValue})=>{
+    try {
+   
+        const {data}=await axios.get(`/api/v1/admin/reviews?id=${productId}`)
+        return data
+        
+    } catch (error) {
+        return rejectWithValue(error.response?.data || 'Failed to fetch product reviews')
+    }
+})
+export const deleteReview=createAsyncThunk('admin/deleteReview',async({productId,reviewId},{rejectWithValue})=>{
+    try {
+   
+        const {data}=await axios.delete(`/api/v1/admin/reviews?productId=${productId}&id=${reviewId}`)
+        return data
+        
+    } catch (error) {
+        return rejectWithValue(error.response?.data || 'Failed to delete product review')
     }
 })
 
@@ -326,6 +347,41 @@ const adminSlice = createSlice({
         .addCase(updateOrderStatus.rejected,(state,action)=>{    
             state.loading=false
             state.error = action.payload?.message || 'Failed to update order status'
+        })
+         builder.addCase(fetchProductReviews.pending,(state,action)=>{
+            state.loading=true
+            state.error=null
+        })
+        .addCase(fetchProductReviews.fulfilled,(state,action)=>{
+            state.loading = false
+            state.reviews = action.payload.reviews
+
+        })
+        .addCase(fetchProductReviews.rejected,(state,action)=>{    
+            state.loading=false
+            state.error = action.payload?.message || 'Failed to fetch Product Reviews'
+        })
+         builder.addCase(deleteReview.pending,(state,action)=>{
+            state.loading=true
+            state.error=null
+        })
+        .addCase(deleteReview.fulfilled,(state,action)=>{
+            const {productId,reviewId}=action.meta.arg
+            //removing deleted review
+            state.reviews = state.reviews.filter(r=>r._id!==reviewId)
+            //update no of reviews for the product
+            const productIndex = state.products.findIndex(p=>p._id===productId)
+            if(productIndex!==-1 && state.products[productIndex].numOfReviews>0){
+                state.products[productIndex].numOfReviews-=1
+            }
+            state.loading = false
+            state.success = action.payload.success
+            state.message = action.payload.message
+
+        })
+        .addCase(deleteReview.rejected,(state,action)=>{    
+            state.loading=false
+            state.error = action.payload?.message || 'Failed to delete Product Review'
         })
     }
 })

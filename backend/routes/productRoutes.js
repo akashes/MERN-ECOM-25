@@ -21,6 +21,9 @@ router.route('/admin/products/:id')
 .delete(verifyUserAuth,roleBasedAccess('admin'), deleteProduct)
 
 router.route('/reviews').put(verifyUserAuth,createProductReview)
-router.route('/reviews').get(getProductReviews) //accepts product id as query
-router.route('/reviews').delete(verifyUserAuth,deleteReview) //accepts product id as query
+router.route('/admin/reviews')
+.get(verifyUserAuth,roleBasedAccess('admin'),getProductReviews)
+.delete( verifyUserAuth,roleBasedAccess('admin'), verifyUserAuth,deleteReview) 
+//accepts product id as query
+//accepts product id as query
 export default router
