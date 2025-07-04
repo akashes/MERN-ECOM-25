@@ -29,6 +29,7 @@ import UpdateRole from "./Admin/UpdateRole";
 import OrdersList from "./Admin/OrdersList";
 import UpdateOrder from "./Admin/UpdateOrder";
 import ReviewsList from "./Admin/ReviewsList";
+import About from "./components/About";
 const Home = React.lazy(() => import("./pages/Home"));
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -44,6 +45,7 @@ const App = () => {
       <Suspense fallback={<h1>Loading</h1>}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About/>} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/products" element={<Products />} />
           <Route path="/register" element={<Register />} />

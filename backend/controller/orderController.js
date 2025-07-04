@@ -55,6 +55,7 @@ export const getMyOrders=handleAsyncError(async(req,res,next)=>{
 export const getAllOrders=handleAsyncError(async(req,res,next)=>{
   const orders=  await Order.find()
   const total = orders.reduce((acc,item)=>item.totalPrice+acc,0)
+  console.log('total order amount',total)
   if(!orders){
     return next(new handleError('Orders not found',404))
   }

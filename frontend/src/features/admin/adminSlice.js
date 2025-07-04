@@ -314,7 +314,7 @@ const adminSlice = createSlice({
         .addCase(fetchAllOrders.fulfilled,(state,action)=>{
             state.loading = false
             state.orders = action.payload.orders
-            state.totalAmount = action.payload.totalAmount
+            state.totalAmount = action.payload.total
         })
         .addCase(fetchAllOrders.rejected,(state,action)=>{    
             state.loading=false

@@ -50,7 +50,7 @@ const Navbar = () => {
                 <ul>
                     <li  onClick={()=>setIsMenuOpen(false)} ><Link to='/home'>Home</Link></li>
                     <li><Link to='/products'>Products</Link></li>
-                    <li><Link to='/about-us'>About Us</Link></li>
+                    <li><Link to='/about'>About Us</Link></li>
                     <li><Link to='/contact-us'>Contact Us</Link></li>
                 </ul>
             </div>
