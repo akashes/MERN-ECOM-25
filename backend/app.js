@@ -33,6 +33,10 @@ app.use(
   })
 );
 
+
+console.log("MONGO_URI =", process.env.MONGO_URI);
+
+
 //routes
 app.get('/',(req,res)=>{
     res.send('hello')
@@ -42,12 +46,21 @@ app.use('/api/v1',user)
 app.use('/api/v1',order)
 app.use('/api/v1',payment) 
 
+
+//serve static files
+app.use(express.static(path.join(__dirname,'../frontend/dist')))
+app.get("*",(req,res)=>{
+    console.log('Serving frontend for path:', req.originalUrl); // 🕵️ log
+
+  res.sendFile(path.resolve(__dirname,'../frontend/dist/index.html'))
+})
+
 //error middleware
 app.use(errorHandleMiddleware)
-if(process.env.NODE_ENV!=='PRODUCTION'){
+// if(process.env.NODE_ENV!=='PRODUCTION'){
 
-  dotenv.config({path:'backend/config/config.env'})
-}
+//   dotenv.config({path:'backend/config/config.env'})
+// }
 
 
-export default app
+export default app 
