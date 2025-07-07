@@ -8,7 +8,6 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "build":"npm run build --prefix frontend"
-    
   },
   "keywords": [],
   "author": "",
@@ -28,5 +27,8 @@
     "nodemailer": "^7.0.2",
     "razorpay": "^2.9.6",
     "validator": "^13.15.0"
+  },
+  "devDependencies": {
+    "rollup-plugin-visualizer": "^6.0.3"
   }
 }

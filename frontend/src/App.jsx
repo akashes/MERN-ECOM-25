@@ -1,35 +1,42 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, lazy } from "react";
 import { Routes, BrowserRouter as Router, Route } from "react-router-dom";
-import ProductPage from "./pages/ProductPage";
-import Products from "./pages/Products";
-import Register from "./User/Register";
-import Login from "./User/Login";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "./features/user/userSlice";
-import UserDashboard from "./User/UserDashboard";
-import Profile from "./User/Profile";
-import ProtectedRoutes from "./components/ProtectedRoutes";
-import UpdateProfile from "./User/UpdateProfile";
-import UpdatePassword from "./User/UpdatePassword";
-import ForgotPassword from "./User/ForgotPassword";
-import ResetPassword from "./User/ResetPassword";
-import Cart from "./Cart/Cart";
-import Shipping from "./Cart/Shipping";
-import OrderConfirm from "./Cart/OrderConfirm";
-import Payment from "./Cart/Payment";
-import PaymentSuccess from "./Cart/PaymentSuccess";
-import MyOrders from "./Orders/MyOrders";
-import OrderDetails from "./Orders/OrderDetails";
-import Dashboard from "./Admin/Dashboard";
-import ProductsList from "./Admin/productsList";
-import CreateProduct from "./Admin/CreateProduct";
-import UpdateProduct from "./Admin/UpdateProduct";
-import UsersList from "./Admin/UsersList";
-import UpdateRole from "./Admin/UpdateRole";
-import OrdersList from "./Admin/OrdersList";
-import UpdateOrder from "./Admin/UpdateOrder";
-import ReviewsList from "./Admin/ReviewsList";
-import About from "./components/About";
+import ProtectedRoutes from "./components/ProtectedRoutes"; // Keep this as normal import
+import Loader from "./components/Loader";
+import HomeSkeleton from "./components/HomeSkelton";
+import MainLoader from "./components/MainLoader";
+
+// ✅ Lazy-loaded components
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const Products = lazy(() => import("./pages/Products"));
+const Register = lazy(() => import("./User/Register"));
+const Login = lazy(() => import("./User/Login"));
+const UserDashboard = lazy(() => import("./User/UserDashboard"));
+const Profile = lazy(() => import("./User/Profile"));
+const UpdateProfile = lazy(() => import("./User/UpdateProfile"));
+const UpdatePassword = lazy(() => import("./User/UpdatePassword"));
+const ForgotPassword = lazy(() => import("./User/ForgotPassword"));
+const ResetPassword = lazy(() => import("./User/ResetPassword"));
+const Cart = lazy(() => import("./Cart/Cart"));
+const Shipping = lazy(() => import("./Cart/Shipping"));
+const OrderConfirm = lazy(() => import("./Cart/OrderConfirm"));
+const Payment = lazy(() => import("./Cart/Payment"));
+const PaymentSuccess = lazy(() => import("./Cart/PaymentSuccess"));
+const MyOrders = lazy(() => import("./Orders/MyOrders"));
+const OrderDetails = lazy(() => import("./Orders/OrderDetails"));
+const Dashboard = lazy(() => import("./Admin/Dashboard"));
+const ProductsList = lazy(() => import("./Admin/productsList"));
+const CreateProduct = lazy(() => import("./Admin/CreateProduct"));
+const UpdateProduct = lazy(() => import("./Admin/UpdateProduct"));
+const UsersList = lazy(() => import("./Admin/UsersList"));
+const UpdateRole = lazy(() => import("./Admin/UpdateRole"));
+const OrdersList = lazy(() => import("./Admin/OrdersList"));
+const UpdateOrder = lazy(() => import("./Admin/UpdateOrder"));
+const ReviewsList = lazy(() => import("./Admin/ReviewsList"));
+const About = lazy(() => import("./components/About"));
+
+
 const Home = React.lazy(() => import("./pages/Home"));
 const App = () => {
   const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -42,9 +49,14 @@ const App = () => {
   console.log(isAuthenticated, user);
   return (
     <Router>
-      <Suspense fallback={<h1>Loading</h1>}>
+      <Suspense fallback={<MainLoader/>}>
         <Routes>
-          <Route path="/" element={<Home />} />
+  
+          <Route path="/" element={
+            <Suspense fallback={<HomeSkeleton/>}>
+              <Home/>
+            </Suspense>
+          } />
           <Route path="/about" element={<About/>} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/products" element={<Products />} />

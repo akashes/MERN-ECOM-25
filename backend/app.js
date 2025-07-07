@@ -17,6 +17,7 @@ const __dirname = path.dirname(__fileName)
 const app = express()
 
 
+
 //middlewares
 app.use(cors(
     {
@@ -53,6 +54,12 @@ app.get("*",(req,res)=>{
     console.log('Serving frontend for path:', req.originalUrl); // 🕵️ log
 
   res.sendFile(path.resolve(__dirname,'../frontend/dist/index.html'))
+})
+
+//serve static files
+app.use(express.static(path.join(__dirname,'../frontend/dist')))
+app.get(',{*any}',(_,res)=>{
+    res.sendFile(path.resolve(__dirname,'../frontend/dist/index.html'))
 })
 
 //error middleware
