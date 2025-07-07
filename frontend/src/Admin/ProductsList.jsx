@@ -13,7 +13,7 @@ import Spinner from '../components/Spinner'
 
 
 
-const productsList = () => {
+const ProductsList = () => {
     const {products,loading,error,deleting}=useSelector(state=>state.admin)
     console.log(products)
 
@@ -116,4 +116,4 @@ const productsList = () => {
   )
 }
 
-export default productsList
+export default ProductsList

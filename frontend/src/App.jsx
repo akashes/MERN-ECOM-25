@@ -26,7 +26,7 @@ const PaymentSuccess = lazy(() => import("./Cart/PaymentSuccess"));
 const MyOrders = lazy(() => import("./Orders/MyOrders"));
 const OrderDetails = lazy(() => import("./Orders/OrderDetails"));
 const Dashboard = lazy(() => import("./Admin/Dashboard"));
-const ProductsList = lazy(() => import("./Admin/productsList"));
+const ProductsList = lazy(() => import("./Admin/ProductsList"));
 const CreateProduct = lazy(() => import("./Admin/CreateProduct"));
 const UpdateProduct = lazy(() => import("./Admin/UpdateProduct"));
 const UsersList = lazy(() => import("./Admin/UsersList"));
