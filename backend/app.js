@@ -8,8 +8,14 @@ import payment from './routes/paymentRoutes.js'
 import cors from 'cors'
 import fileUpload from 'express-fileupload'
 import dotenv from 'dotenv'
-const app = express()
 
+import path from 'path'
+
+const app = express()
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 //middlewares
 app.use(cors(
@@ -36,9 +42,18 @@ app.use('/api/v1',user)
 app.use('/api/v1',order)
 app.use('/api/v1',payment)
 
+//serve static files
+app.use(express.static(path.join(__dirname,'../frontend/dist')))
+app.get(',{*any}',(_,res)=>{
+    res.sendFile(path.resolve(__dirname,'../frontend/dist/index.html'))
+})
+
 //error middleware
 app.use(errorHandleMiddleware)
-dotenv.config({path:'backend/config/config.env'})
+if(process.env.NODE_ENV !== 'PRODUCTION'){
+  
+  dotenv.config({path:'backend/config/config.env'})
+}
 
 
 export default app

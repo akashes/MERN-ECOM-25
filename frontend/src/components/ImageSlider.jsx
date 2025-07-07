@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import '../componentStyles/ImageSlider.css'
 const images=[
-    './images/image.png',
-    './images/image.png',
-    './images/image.png',
-    './images/image.png'
+    './images/image.webp',
+    './images/image.webp',
+    './images/image.webp',
+    './images/image.webp'
 ]
 const ImageSlider = () => {
     const[currentIndex,setCurrentIndex]=useState(0)

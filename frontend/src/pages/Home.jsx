@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import { fetchProducts, removeErrors } from '../features/products/productSlice.js'
 import Loader from '../components/Loader.jsx'
 import { toast } from 'react-toastify'
+import HomeSkeleton from '../components/HomeSkelton.jsx'
 // const products=[
 //    {
 //             "_id": "6818ddbba199ed8135a62be8",
@@ -67,13 +68,13 @@ const Home = () => {
     }
   },[dispatch,error])
 
-  if(loading){
-    return <h2>Loading...</h2>
-  }
+  // if(loading){
+  //   return <h2>Loading...</h2>
+  // }
   return (
    <>
    {
-    loading?(<Loader/>):(
+    loading?(<HomeSkeleton/>):(
       <>
       <PageTitle title="Home-My Shop "/>
    <Navbar/>

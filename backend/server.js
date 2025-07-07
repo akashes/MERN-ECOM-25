@@ -1,7 +1,10 @@
 import app from './app.js'
 import dotenv from 'dotenv'
 
-dotenv.config({path:'backend/config/config.env'}) //path based on the root directory which started the app
+if(process.env.NODE_ENV !== 'PRODUCTION'){
+    dotenv.config({path:'backend/config/config.env'}) //path based on the root directory which started the app
+}
+
 import {v2 as cloudinary} from 'cloudinary'
 import { connectDB } from './config/db.js'
 import Razorpay from 'razorpay'

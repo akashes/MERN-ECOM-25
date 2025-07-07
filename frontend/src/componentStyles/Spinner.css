@@ -5,7 +5,7 @@
     border-top: 4px solid var(--primary-main, #6C5B7B); 
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin: auto; /* center horizontally */
+  margin: auto; 
 }
 
 @keyframes spin {
