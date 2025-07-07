@@ -58,9 +58,9 @@ app.use('/api/v1',payment)
 
 //serve static files
 app.use(express.static(path.join(__dirname,'../frontend/dist')))
-app.get(',{*any}',(_,res)=>{
-    res.sendFile(path.resolve(__dirname,'../frontend/dist/index.html'))
-})
+app.get('/*', (_, res) => {
+  res.sendFile(path.resolve(__dirname, '../frontend/dist/index.html'));
+});
 
 //error middleware
 app.use(errorHandleMiddleware)
