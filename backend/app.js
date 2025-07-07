@@ -45,9 +45,7 @@ console.log("MONGO_URI =", process.env.MONGO_URI);
 
 
 //routes
-app.get('/',(req,res)=>{
-    res.send('hello')
-})
+
 app.use('/api/v1',product)
 app.use('/api/v1',user)
 app.use('/api/v1',order)
